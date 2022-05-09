@@ -7,13 +7,19 @@
     "watch": "tsc -w",
     "prestart": "npm run build",
     "start": "func start",
-    "test": "echo \"No tests yet...\""
+    "test": "echo \"No tests yet...\"",
+    "lint": "eslint --fix",
+    "format": "prettier --write ."
   },
   "devDependencies": {
-    "typescript": "^4.0.0"
+    "eslint": "8.15.0",
+    "eslint-plugin-prettier": "4.0.0",
+    "typescript": "4.0.0"
   },
   "dependencies": {
-    "@azure/functions": "^3.0.0",
+    "@azure/functions": "3.0.0",
+    "@zero-tech/data-store": "0.0.2",
+    "ajv": "8.11.0",
     "env-var": "7.1.1",
     "mongodb": "4.3.1"
   }

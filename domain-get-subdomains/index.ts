@@ -1,11 +1,11 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
-import { doServiceOperation, listDomains } from "../src/services/domainService";
+import { doServiceOperation, getSubdomains } from "../src/services/domainService";
 
 const httpTrigger: AzureFunction = async function (
   context: Context,
   req: HttpRequest
 ): Promise<void> {
-  await doServiceOperation(listDomains, context, req);
+  await doServiceOperation(getSubdomains, context, req);
 };
 
 export default httpTrigger;

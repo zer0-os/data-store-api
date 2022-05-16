@@ -1,11 +1,12 @@
 {
   "bindings": [
     {
+      "route": "domains/search/owner/{address}",
       "authLevel": "anonymous",
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["get"]
+      "methods": ["post"]
     },
     {
       "type": "http",
@@ -13,5 +14,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/health/index.js"
+  "scriptFile": "../dist/domain-search-by-owner/index.js"
 }

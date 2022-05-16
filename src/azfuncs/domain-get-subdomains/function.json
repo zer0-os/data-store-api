@@ -1,0 +1,18 @@
+{
+  "bindings": [
+    {
+      "route": "domains/subdomains/{id}",
+      "authLevel": "anonymous",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "req",
+      "methods": ["post"]
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "res"
+    }
+  ],
+  "scriptFile": "../dist/azfuncs/domain-get-subdomains/index.js"
+}

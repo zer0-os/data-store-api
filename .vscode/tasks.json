@@ -3,7 +3,8 @@
   "tasks": [
     {
       "type": "func",
-      "command": "host start",
+      "command": "host start --script-root 'dist/azfuncs'",
+      "label": "func: host start",
       "problemMatcher": "$func-node-watch",
       "isBackground": true,
       "dependsOn": "npm build (functions)"

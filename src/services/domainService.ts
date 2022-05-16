@@ -4,8 +4,8 @@ import {
   DomainFindOptions,
   DomainId,
   Maybe,
-} from "@zero-tech/data-store";
-import { MongoDbService } from "@zero-tech/data-store/lib/database/mongo/mongoDbService";
+} from "@zero-tech/data-store-core";
+import { MongoDbService } from "@zero-tech/data-store-core/lib/database/mongo/mongoDbService";
 import { MongoClient } from "mongodb";
 import { getConnectedDbClient, getDatabaseService } from "../helpers";
 import { validateBlockchainAddress, validateDomainId } from "../schemas";

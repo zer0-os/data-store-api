@@ -1,5 +1,5 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
-import { doServiceOperation, searchDomainsByName } from "../services/domainService";
+import { doServiceOperation, searchDomainsByName } from "../src/services/domainService";
 
 const httpTrigger: AzureFunction = async function (
   context: Context,

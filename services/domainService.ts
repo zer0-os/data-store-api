@@ -11,7 +11,7 @@ import { getConnectedDbClient, getDatabaseService } from "../helpers";
 import { validateBlockchainAddress, validateDomainId } from "../schemas";
 
 // add try/catch/finally wrapper for 500s
-export async function doOp(
+export async function doServiceOperation(
   serviceFn: Function,
   context: Context,
   request: HttpRequest

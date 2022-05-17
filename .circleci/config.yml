@@ -10,6 +10,10 @@ jobs:
     executor: node/default
     steps:
       - checkout
+      - run:
+          command: create npmrc
+          name: echo "registry=https://registry.npmjs.org/" > ~/.npmrc
+                echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
       - node/install-packages:
           pkg-manager: npm
       - run:
@@ -20,7 +24,7 @@ jobs:
           paths:
             - .
   deploy:
-    working_directory: ~/repo
+    # working_directory: ~/repo
     executor: node/default
     steps:
       - azure-cli/install

@@ -40,4 +40,5 @@ orbs:
 workflows:
   deploy-with-principal:
     jobs:
+      - build
       - deploy

@@ -13,7 +13,7 @@ jobs:
       - azure-cli/login-with-service-principal
       - run: 
           name: Build Application
-          command: tsc
+          command: npm run build
       - run:
           name: Install Azure functions tools
           command: sudo npm i -g azure-functions-core-tools@4 --unsafe-perm true

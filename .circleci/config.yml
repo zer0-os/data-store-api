@@ -4,19 +4,25 @@ pre:
     - echo "registry=https://registry.npmjs.org/" > ~/.npmrc
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
 jobs:
+  build:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          command: npm run build
+          name: Build app
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .
   deploy:
     working_directory: ~/repo
     executor: node/default
     steps:
-      - checkout
       - azure-cli/install
       - azure-cli/login-with-service-principal
-      - run:
-          name: Install Typescript
-          command: npm install typescript
-      - run: 
-          name: Build Application
-          command: tsc
       - run:
           name: Install Azure functions tools
           command: sudo npm i -g azure-functions-core-tools@4 --unsafe-perm true

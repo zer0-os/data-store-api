@@ -22,6 +22,14 @@ jobs:
           root: ~/project
           paths:
             - .
+      - azure-cli/install
+      - azure-cli/login-with-service-principal
+      - run:
+          name: Install Azure functions tools
+          command: sudo npm i -g azure-functions-core-tools@4 --unsafe-perm true
+      - run:
+          name: Deploy to Azure function App
+          command: func azure functionapp publish af-datastore-api-mainnet-prod --typescript
   deploy:
     # working_directory: ~/repo
     executor: node/default
@@ -46,4 +54,3 @@ workflows:
   deploy-with-principal:
     jobs:
       - build
-      - deploy

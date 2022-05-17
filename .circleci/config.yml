@@ -1,5 +1,8 @@
 # This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
 version: 2.1
+pre:
+    - echo "registry=https://registry.npmjs.org/" > ~/.npmrc
+    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
 jobs:
   deploy:
     working_directory: ~/repo
@@ -8,6 +11,9 @@ jobs:
       - checkout
       - azure-cli/install
       - azure-cli/login-with-service-principal
+      - run: 
+          name: Build Application
+          command: tsc
       - run:
           name: Install Azure functions tools
           command: sudo npm i -g azure-functions-core-tools@4 --unsafe-perm true

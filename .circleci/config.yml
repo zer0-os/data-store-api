@@ -11,9 +11,9 @@ jobs:
     steps:
       - checkout
       - run:
-          command: create npmrc
-          name: echo "registry=https://registry.npmjs.org/" > ~/.npmrc
-                echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
+          name: create npmrc
+          command: echo "registry=https://registry.npmjs.org/" > ~/.npmrc
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
       - node/install-packages:
           pkg-manager: npm
       - run:

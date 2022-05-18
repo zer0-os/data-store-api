@@ -36,4 +36,7 @@ orbs:
 workflows:
   deploy-with-principal:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              only: develop

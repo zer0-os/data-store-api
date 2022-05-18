@@ -24,7 +24,7 @@ jobs:
           command: sudo npm i -g azure-functions-core-tools@4 --unsafe-perm true
       - run:
           name: Deploy to Azure function App
-          command: func azure functionapp publish af-datastore-api-mainnet-prod --typescript
+          command: func azure functionapp publish af-datastore-api-rinkeby-prod --typescript
 # Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
 # See: https://circleci.com/docs/2.0/orb-intro/
 orbs:

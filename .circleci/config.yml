@@ -3,6 +3,7 @@ version: 2.1
 jobs:
   build-and-deploy:
     executor: node/default
+    working_directory: /tmp
     steps:
       - checkout
       - run:
@@ -14,14 +15,9 @@ jobs:
           command: npm run build
           name: Build app
       - persist_to_workspace:
-          root: ~/project
+          root: workspace
           paths:
-            - .
-      - azure-cli/install
-      - azure-cli/login-with-service-principal
-      - run:
-          name: Install Azure functions tools
-          command: sudo npm i -g azure-functions-core-tools@4 --unsafe-perm true
+            - output
       # - run:
       #    name: Deploy to Azure function App
       #    command: func azure functionapp publish af-datastore-api-rinkeby-prod --typescript
@@ -29,6 +25,31 @@ jobs:
   deploy-rinkeby:
     executor: node/default
     steps:
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: /tmp/workspace/output
+
+      - azure-cli/install
+      - azure-cli/login-with-service-principal
+      - run:
+          name: Install Azure functions tools
+          command: sudo npm i -g azure-functions-core-tools@4 --unsafe-perm true
+      - run:
+          name: Deploy to Azure function App
+          command: func azure functionapp publish af-datastore-api-rinkeby-prod --typescript
+
+  deploy-mainnet:
+    executor: node/default
+    steps:
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: /tmp/workspace/output
+          
+      - azure-cli/install
+      - azure-cli/login-with-service-principal
+      - run:
+          name: Install Azure functions tools
+          command: sudo npm i -g azure-functions-core-tools@4 --unsafe-perm true
       - run:
           name: Deploy to Azure function App
           command: func azure functionapp publish af-datastore-api-rinkeby-prod --typescript
@@ -44,8 +65,12 @@ orbs:
 workflows:
   build-and-deploy:
     jobs:
-      - build-and-deploy:
+      - build-and-deploy
+      - deploy-rinkeby:
           filters:
             branches:
               only: develop
-      - deploy-rinkeby
+      - deploy-mainnet:
+          filters:
+            branches:
+              only: master

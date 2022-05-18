@@ -1,7 +1,7 @@
 # This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
 version: 2.1
 jobs:
-  build-and-deploy:
+  build:
     executor: node/default
     steps:
       - checkout
@@ -14,7 +14,7 @@ jobs:
           command: npm run build
           name: Build app
       - persist_to_workspace:
-          root: workspace
+          root: ~/project
           paths:
             - .
       # - run:
@@ -26,7 +26,7 @@ jobs:
     steps:
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
-          at: /tmp/workspace
+          at: ~/project
 
       - azure-cli/install
       - azure-cli/login-with-service-principal
@@ -42,7 +42,7 @@ jobs:
     steps:
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
-          at: /tmp/workspace
+          at: ~/project
 
       - azure-cli/install
       - azure-cli/login-with-service-principal
@@ -64,7 +64,7 @@ orbs:
 workflows:
   build-and-deploy:
     jobs:
-      - build-and-deploy
+      - build
       - deploy-rinkeby:
           filters:
             branches:

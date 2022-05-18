@@ -1,7 +1,7 @@
 # This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
 version: 2.1
 jobs:
-  build-and-deploy:
+  deploy-rinkeby:
     executor: node/default
     steps:
       - checkout
@@ -24,7 +24,33 @@ jobs:
           command: sudo npm i -g azure-functions-core-tools@4 --unsafe-perm true
       - run:
           name: Deploy to Azure function App
-          command: func azure functionapp publish af-datastore-api-mainnet-prod --typescript
+          command: func azure functionapp publish af-datastore-api-rinkeby-prod --typescript
+
+  deploy-mainnet:
+    executor: node/default
+    steps:
+      - checkout
+      - run:
+          name: create npmrc
+          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          command: npm run build
+          name: Build app
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .
+      - azure-cli/install
+      - azure-cli/login-with-service-principal
+      - run:
+          name: Install Azure functions tools
+          command: sudo npm i -g azure-functions-core-tools@4 --unsafe-perm true
+      - run:
+          name: Deploy to Azure function App
+          command: func azure functionapp publish af-datastore-api-rinkeby-prod --typescript
+
 # Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
 # See: https://circleci.com/docs/2.0/orb-intro/
 orbs:
@@ -34,9 +60,13 @@ orbs:
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  deploy-with-principal:
+  build-and-deploy:
     jobs:
-      - build-and-deploy:
+      - deploy-rinkeby:
+          filters:
+            branches:
+              only: develop
+      - deploy-mainnet:
           filters:
             branches:
               only: master

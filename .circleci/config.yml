@@ -1,7 +1,7 @@
 # This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
 version: 2.1
 jobs:
-  build:
+  build_and_Deploy:
     executor: node/default
     steps:
       - checkout
@@ -36,7 +36,7 @@ orbs:
 workflows:
   deploy-with-principal:
     jobs:
-      - build:
+      - build_and_Deploy:
           filters:
             branches:
               only: develop

@@ -1,7 +1,7 @@
 # This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
 version: 2.1
 jobs:
-  build:
+  deploy-rinkeby:
     executor: node/default
     steps:
       - checkout
@@ -17,17 +17,6 @@ jobs:
           root: ~/project
           paths:
             - .
-      # - run:
-      #    name: Deploy to Azure function App
-      #    command: func azure functionapp publish af-datastore-api-rinkeby-prod --typescript
-
-  deploy-rinkeby:
-    executor: node/default
-    steps:
-      - attach_workspace:
-          # Must be absolute path or relative path from working_directory
-          at: ~/project
-
       - azure-cli/install
       - azure-cli/login-with-service-principal
       - run:
@@ -40,10 +29,19 @@ jobs:
   deploy-mainnet:
     executor: node/default
     steps:
-      - attach_workspace:
-          # Must be absolute path or relative path from working_directory
-          at: ~/project
-
+      - checkout
+      - run:
+          name: create npmrc
+          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          command: npm run build
+          name: Build app
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .
       - azure-cli/install
       - azure-cli/login-with-service-principal
       - run:
@@ -64,7 +62,6 @@ orbs:
 workflows:
   build-and-deploy:
     jobs:
-      - build
       - deploy-rinkeby:
           filters:
             branches:

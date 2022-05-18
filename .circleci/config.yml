@@ -3,7 +3,6 @@ version: 2.1
 jobs:
   build-and-deploy:
     executor: node/default
-    working_directory: /tmp
     steps:
       - checkout
       - run:
@@ -17,7 +16,7 @@ jobs:
       - persist_to_workspace:
           root: workspace
           paths:
-            - output
+            - .
       # - run:
       #    name: Deploy to Azure function App
       #    command: func azure functionapp publish af-datastore-api-rinkeby-prod --typescript
@@ -27,7 +26,7 @@ jobs:
     steps:
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
-          at: /tmp/workspace/output
+          at: /tmp/workspace
 
       - azure-cli/install
       - azure-cli/login-with-service-principal
@@ -43,8 +42,8 @@ jobs:
     steps:
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
-          at: /tmp/workspace/output
-          
+          at: /tmp/workspace
+
       - azure-cli/install
       - azure-cli/login-with-service-principal
       - run:

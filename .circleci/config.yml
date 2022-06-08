@@ -1,5 +1,17 @@
 # This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
 version: 2.1
+
+# Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
+# See: https://circleci.com/docs/2.0/orb-intro/
+orbs:
+  node: circleci/node@4.7
+  azure-cli: circleci/azure-cli@1.2.2
+
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - image: circleci/node:14.17.5
+
 jobs:
   deploy-rinkeby:
     executor: node/default
@@ -67,17 +79,11 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - azure-acr/build-and-push-image:
-          login-server-name: zer0cptcontainers.azurecr.io 
-          registry-name: zer0cptcontainers 
+          login-server-name: zer0cptcontainers.azurecr.io
+          registry-name: zer0cptcontainers
           repo: data-store-api
           attach-workspace: false
           tag: ${CIRCLE_TAG/v/''}
-
-# Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
-# See: https://circleci.com/docs/2.0/orb-intro/
-orbs:
-  node: circleci/node@4.7
-  azure-cli: circleci/azure-cli@1.2.2
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows

@@ -66,6 +66,9 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+      - run:
+          name: create npmrc
+          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
       - node/install-packages:
           pkg-manager: npm
       - run: npm run build

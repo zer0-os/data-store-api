@@ -10,7 +10,7 @@ WORKDIR /home/site/wwwroot
 RUN cd /home/site/wwwroot
 
 RUN echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc && \
-    npm install --production && \
+    npm install && \
     rm -f .npmrc
 
 RUN npm run build

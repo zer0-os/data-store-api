@@ -25,7 +25,6 @@ jobs:
       - run:
           name: Deploy to Azure function App
           command: func azure functionapp publish af-datastore-api-rinkeby-prod --typescript
-
   deploy-mainnet:
     executor: node/default
     steps:
@@ -50,6 +49,29 @@ jobs:
       - run:
           name: Deploy to Azure function App
           command: func azure functionapp publish af-datastore-api-rinkeby-prod --typescript
+  test:
+    <<: *defaults
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+      - run: yarn build
+      - persist_to_workspace:
+          root: ~/repo
+          paths: .
+  buildDocker:
+    <<: *defaults
+    steps:
+      - setup_remote_docker:
+          version: 20.10.14
+      - attach_workspace:
+          at: ~/repo
+      - azure-acr/build-and-push-image:
+          login-server-name: zer0cptcontainers.azurecr.io 
+          registry-name: zer0cptcontainers 
+          repo: data-store-api
+          attach-workspace: false
+          tag: ${CIRCLE_TAG/v/''}
 
 # Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
 # See: https://circleci.com/docs/2.0/orb-intro/
@@ -70,3 +92,24 @@ workflows:
           filters:
             branches:
               only: master
+  test:
+    jobs:
+      - test:
+          filters:
+            branches:
+              ignore: master
+  test-and-publish-docker:
+    jobs:
+      - test:
+          filters:
+            &filters-production # this yaml anchor is setting these values to "filters-production"
+            branches:
+              only:
+                - master
+            tags:
+              only: /^v.*/
+      - buildDocker:
+          requires:
+            - test
+          filters:
+            <<: *filters-production # this is calling the previously set yaml anchor

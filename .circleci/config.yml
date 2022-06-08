@@ -6,6 +6,7 @@ version: 2.1
 orbs:
   node: circleci/node@4.7
   azure-cli: circleci/azure-cli@1.2.2
+  azure-acr: circleci/azure-acr@0.2.0
 
 defaults: &defaults
   working_directory: ~/repo

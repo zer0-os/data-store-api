@@ -65,6 +65,7 @@ jobs:
           command: func azure functionapp publish af-datastore-api-rinkeby-prod --typescript
   test:
     <<: *defaults
+    executor: docker/docker
     steps:
       - checkout
       - run:
@@ -81,7 +82,6 @@ jobs:
           paths: .
   buildDocker:
     <<: *defaults
-    executor: docker/docker
     steps:
       - setup_remote_docker:
           version: 20.10.14

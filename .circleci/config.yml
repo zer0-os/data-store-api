@@ -81,6 +81,7 @@ jobs:
           paths: .
   buildDocker:
     <<: *defaults
+    executor: docker/docker
     steps:
       - setup_remote_docker:
           version: 20.10.14

@@ -107,7 +107,9 @@ workflows:
       - deploy-mainnet:
           filters:
             branches:
-              only: master
+              ignore: /.*/
+            tags:
+              only: /^v.*/
   test:
     jobs:
       - test:
@@ -120,8 +122,7 @@ workflows:
           filters:
             &filters-production # this yaml anchor is setting these values to "filters-production"
             branches:
-              only:
-                - master
+              ignore: /.*/
             tags:
               only: /^v.*/
       - buildDocker:

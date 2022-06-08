@@ -64,8 +64,10 @@ jobs:
           name: Deploy to Azure function App
           command: func azure functionapp publish af-datastore-api-rinkeby-prod --typescript
   test:
-    executor: docker/docker
+    <<: *defaults
     steps:
+      - setup_remote_docker:
+          version: 20.10.14
       - checkout
       - run:
           name: create npmrc

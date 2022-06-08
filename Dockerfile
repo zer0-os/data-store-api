@@ -8,7 +8,6 @@ COPY . /home/site/wwwroot
 
 WORKDIR /home/site/wwwroot
 RUN cd /home/site/wwwroot
-RUN npm i
 
 RUN echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc && \
     npm install --production && \

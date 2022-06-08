@@ -67,6 +67,7 @@ jobs:
     steps:
       - setup_remote_docker:
           version: 20.10.14
+          docker_layer_caching: true
       - checkout
       - run:
           name: create npmrc
@@ -74,7 +75,7 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run: npm run build
-      - run: docker build -t zer0cptcontainers/data-store-api .
+      - run: docker build -t zer0cptcontainers/data-store-api . --build-arg NPM_TOKEN=${NPM_TOKEN}
       - persist_to_workspace:
           root: ~/repo
           paths: .
@@ -83,6 +84,7 @@ jobs:
     steps:
       - setup_remote_docker:
           version: 20.10.14
+          docker_layer_caching: true
       - attach_workspace:
           at: ~/repo
       - azure-acr/build-and-push-image:
@@ -91,6 +93,7 @@ jobs:
           repo: data-store-api
           attach-workspace: false
           tag: ${CIRCLE_TAG/v/''}
+          extra-build-args: --build-arg NPM_TOKEN=${NPM_TOKEN}
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows

@@ -14,8 +14,9 @@ defaults: &defaults
     - image: circleci/node:14.17.5
 
 jobs:
-  deploy-rinkeby:
+  build:
     executor: node/default
+    working_directory: ~/project
     steps:
       - checkout
       - run:
@@ -30,6 +31,13 @@ jobs:
           root: ~/project
           paths:
             - .
+
+  deploy-rinkeby:
+    executor: node/default
+    working_directory: ~/project
+    steps:
+      - attach_workspace:
+          at: ~/project
       - azure-cli/install
       - azure-cli/login-with-service-principal
       - run:
@@ -40,20 +48,10 @@ jobs:
           command: func azure functionapp publish af-datastore-api-rinkeby-prod --typescript
   deploy-mainnet:
     executor: node/default
+    working_directory: ~/project
     steps:
-      - checkout
-      - run:
-          name: create npmrc
-          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-      - node/install-packages:
-          pkg-manager: npm
-      - run:
-          command: npm run build
-          name: Build app
-      - persist_to_workspace:
-          root: ~/project
-          paths:
-            - .
+      - attach_workspace:
+          at: ~/project
       - azure-cli/install
       - azure-cli/login-with-service-principal
       - run:
@@ -100,11 +98,16 @@ jobs:
 workflows:
   build-and-deploy:
     jobs:
+      - build
       - deploy-rinkeby:
+          requires:
+            - build
           filters:
             branches:
               only: develop
       - deploy-mainnet:
+          requires:
+            - build
           filters:
             branches:
               ignore: /.*/

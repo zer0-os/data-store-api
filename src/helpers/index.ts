@@ -2,13 +2,12 @@ import { getDbConnectionInfo } from "@zero-tech/data-store-core/lib/database/hel
 import { Context } from "@azure/functions";
 import { MongoClient, MongoClientOptions } from "mongodb";
 import { MongoDbService } from "@zero-tech/data-store-core/lib/database/mongo/mongoDbService";
-import * as env from "env-var"
-
-const dbUser = env.get("DATABASE_USERNAME").required().asString();
-const dbPassword = env.get("DATABASE_PASSWORD").required().asString();
-const dbUri = env.get("DATABASE_URI").required().asString();
+import * as env from "env-var";
 
 export async function getConnectedDbClient(context: Context) {
+  const dbUser = env.get("DATABASE_USERNAME").required().asString();
+  const dbPassword = env.get("DATABASE_PASSWORD").required().asString();
+  const dbUri = env.get("DATABASE_URI").required().asString();
 
   const options: MongoClientOptions = {
     connectTimeoutMS: 10000,
@@ -18,8 +17,8 @@ export async function getConnectedDbClient(context: Context) {
     keepAlive: true,
     auth: {
       username: dbUser,
-      password: dbPassword
-    }
+      password: dbPassword,
+    },
   };
 
   const dbClient = new MongoClient(dbUri, options);

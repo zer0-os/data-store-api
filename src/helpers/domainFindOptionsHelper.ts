@@ -32,7 +32,7 @@ export function getDomainFindOptionsFromQuery(req: HttpRequest) {
 
 //Converting Number to either 1 or -1
 export function valueToSortDirection(val: DomainSortDirection): Sort {
-  return Number(val) === DomainSortDirection.descending ? -1 : 1;
+  return Number(val) === DomainSortDirection.desc ? -1 : 1;
 }
 
 //Converting Number to either 1 or 0
@@ -88,7 +88,7 @@ export function createSort(req: HttpRequest): DynamicObject<SortDirection> {
           valueToSortDirection(
             DomainSortDirection[
               val.toLowerCase() as keyof typeof DomainSortDirection
-            ] ?? DomainSortDirection.descending
+            ] ?? DomainSortDirection.desc
           )
         );
     }

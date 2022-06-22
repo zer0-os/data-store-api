@@ -6,8 +6,8 @@ export interface PaginationResponse<T> {
 }
 
 export enum DomainSortDirection {
-  descending = 0,
-  ascending = 1,
+  desc = 0,
+  asc = 1,
 }
 
 /**

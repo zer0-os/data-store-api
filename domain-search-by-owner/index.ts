@@ -11,6 +11,9 @@ const httpTrigger: AzureFunction = async function (
   req: HttpRequest
 ): Promise<void> {
   try {
+    context.log(
+      "GET Domains by Owner: HTTP trigger function processed a request."
+    );
     const ownerAddress: Address = req.params.address;
     if (!validateAddress(ownerAddress)) {
       context.res = createHTTPResponse(400, validateAddress.errors);
@@ -18,7 +21,7 @@ const httpTrigger: AzureFunction = async function (
     }
 
     let findOptions = getDomainFindOptionsFromQuery(req);
-    const domainService = await getMongoDomainService();
+    const domainService = await getMongoDomainService(context);
     const response = await domainService.searchDomainsByOwner(
       ownerAddress,
       findOptions
@@ -27,6 +30,10 @@ const httpTrigger: AzureFunction = async function (
       body: response,
     };
   } catch (err) {
+    context.log.error(
+      `GET Domains by Owner, error encountered: `,
+      JSON.stringify(err)
+    );
     context.res = createErrorResponse(err, context);
   }
 };

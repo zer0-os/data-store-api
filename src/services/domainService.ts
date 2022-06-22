@@ -1,3 +1,4 @@
+import { Context } from "@azure/functions";
 import { Domain, DomainFindOptions, Maybe } from "@zero-tech/data-store-core";
 import { PaginationResponse } from "../types";
 

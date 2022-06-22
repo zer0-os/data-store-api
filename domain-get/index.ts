@@ -9,8 +9,8 @@ const httpTrigger: AzureFunction = async function (
   context: Context,
   req: HttpRequest
 ): Promise<void> {
-  context.log("HTTP trigger function processed a request.");
   try {
+    context.log("GET Domain: HTTP trigger function processed a request.");
     const domainId: DomainId = req.params.id;
     if (!validateDomainId(domainId)) {
       context.res = createHTTPResponse(400, validateDomainId.errors);
@@ -18,12 +18,13 @@ const httpTrigger: AzureFunction = async function (
     }
 
     let findOptions = getDomainFindOptionsFromQuery(req);
-    const domainService = await getMongoDomainService();
+    const domainService = await getMongoDomainService(context);
     const response = await domainService.getDomain(req.params.id, findOptions);
     context.res = {
       body: response,
     };
   } catch (err) {
+    context.log.error(`GET Domain, error encountered: `, JSON.stringify(err));
     context.res = createErrorResponse(err, context);
   }
 };

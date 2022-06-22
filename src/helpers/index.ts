@@ -34,8 +34,8 @@ export function getDatabaseService(dbClient: MongoClient) {
   return MongoDbService.instance(dbClient, dbConnectionInfo);
 }
 
-export async function getMongoDomainService() {
+export async function getMongoDomainService(context: Context) {
   const dbClient = await getConnectedDbClient();
   const dbService = getDatabaseService(dbClient);
-  return new MongoDomainService(dbClient, dbService);
+  return new MongoDomainService(dbClient, dbService, context);
 }

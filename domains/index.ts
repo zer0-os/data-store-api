@@ -8,13 +8,15 @@ const httpTrigger: AzureFunction = async function (
   req: HttpRequest
 ): Promise<void> {
   try {
+    context.log("GET Domains: HTTP trigger function processed a request.");
     let findOptions = getDomainFindOptionsFromQuery(req);
-    const domainService = await getMongoDomainService();
+    const domainService = await getMongoDomainService(context);
     const response = await domainService.listDomains(findOptions);
     context.res = {
       body: response,
     };
   } catch (err) {
+    context.log.error(`GET Domains, error encountered: `, JSON.stringify(err));
     context.res = createErrorResponse(err, context);
   }
 };

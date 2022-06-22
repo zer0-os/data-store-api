@@ -1,12 +1,12 @@
 {
   "bindings": [
     {
-      "route": "v1/domains/subdomains/{id}",
+      "route": "domains/subdomains/{id}",
       "authLevel": "anonymous",
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["get"]
+      "methods": ["post"]
     },
     {
       "type": "http",
@@ -14,5 +14,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/domain-get-subdomains/index.js"
+  "scriptFile": "../dist/domain-get-subdomains-legacy/index.js"
 }

@@ -1,12 +1,12 @@
 {
   "bindings": [
     {
-      "route": "domains/get/{id}",
+      "route": "v1/domains/get/{id}",
       "authLevel": "anonymous",
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["post"]
+      "methods": ["get"]
     },
     {
       "type": "http",

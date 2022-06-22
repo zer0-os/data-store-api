@@ -1,12 +1,12 @@
 {
   "bindings": [
     {
-      "route": "domains/search/name/{name}",
+      "route": "v1/domains/search/name/{name}",
       "authLevel": "anonymous",
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["post"]
+      "methods": ["get"]
     },
     {
       "type": "http",

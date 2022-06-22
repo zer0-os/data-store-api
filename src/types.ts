@@ -1,8 +1,8 @@
 import { Domain } from "@zero-tech/data-store-core";
 
-export interface DomainsApiResponse {
-  numResults?: number;
-  results: Domain[];
+export interface PaginationResponse<T> {
+  numResults: number;
+  results: T[];
 }
 
 export enum DomainSortDirection {

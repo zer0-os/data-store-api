@@ -1,5 +1,5 @@
 import { Domain, DomainFindOptions, Maybe } from "@zero-tech/data-store-core";
-import { DomainsApiResponse } from "../types";
+import { PaginationResponse } from "../types";
 
 export abstract class DomainService<T> {
   dbService: T;
@@ -8,7 +8,7 @@ export abstract class DomainService<T> {
   }
   abstract listDomains(
     findOptions: Maybe<DomainFindOptions>
-  ): Promise<DomainsApiResponse>;
+  ): Promise<PaginationResponse<Domain>>;
   abstract getDomain(
     id: string,
     findOptions: Maybe<DomainFindOptions>
@@ -16,21 +16,21 @@ export abstract class DomainService<T> {
   abstract getSubdomains(
     id: string,
     findOptions: Maybe<DomainFindOptions>
-  ): Promise<DomainsApiResponse>;
+  ): Promise<PaginationResponse<Domain>>;
   abstract searchDomainsByOwner(
     address: string,
     findOptions: Maybe<DomainFindOptions>
-  ): Promise<DomainsApiResponse>;
+  ): Promise<PaginationResponse<Domain>>;
   abstract searchDomainsByName(
     searchTerm: string,
     findOptions: Maybe<DomainFindOptions>
-  ): Promise<DomainsApiResponse>;
+  ): Promise<PaginationResponse<Domain>>;
   abstract doServiceOperation(
     serviceFn: Function
-  ): Promise<DomainsApiResponse | Domain>;
+  ): Promise<PaginationResponse<Domain> | Domain>;
 
-  domainsToDomainsResponse(domains: Domain[]): DomainsApiResponse {
-    const response: DomainsApiResponse = {
+  domainsToDomainsResponse(domains: Domain[]): PaginationResponse<Domain> {
+    const response: PaginationResponse<Domain> = {
       numResults: domains.length,
       results: domains,
     };

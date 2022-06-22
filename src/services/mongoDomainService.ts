@@ -1,7 +1,7 @@
 import { Domain, DomainFindOptions, Maybe } from "@zero-tech/data-store-core";
 import { MongoDbService } from "@zero-tech/data-store-core/lib/database/mongo/mongoDbService";
 import { MongoClient } from "mongodb";
-import { DomainsApiResponse } from "../types";
+import { PaginationResponse } from "../types";
 import { DomainService } from "./domainService";
 
 //Remake to MONGODomainService implemented with mongo
@@ -15,7 +15,7 @@ export class MongoDomainService extends DomainService<MongoDbService> {
 
   async listDomains(
     findOptions: Maybe<DomainFindOptions>
-  ): Promise<DomainsApiResponse> {
+  ): Promise<PaginationResponse<Domain>> {
     const domains: Domain[] = await this.doServiceOperation(async () => {
       return await this.dbService.getAllDomains(findOptions);
     });
@@ -35,7 +35,7 @@ export class MongoDomainService extends DomainService<MongoDbService> {
   async getSubdomains(
     id: string,
     findOptions: Maybe<DomainFindOptions>
-  ): Promise<DomainsApiResponse> {
+  ): Promise<PaginationResponse<Domain>> {
     const domains: Domain[] = await this.doServiceOperation(async () => {
       return await this.dbService.getSubdomainsById(id, findOptions);
     });
@@ -45,7 +45,7 @@ export class MongoDomainService extends DomainService<MongoDbService> {
   async searchDomainsByOwner(
     address: string,
     findOptions: Maybe<DomainFindOptions>
-  ): Promise<DomainsApiResponse> {
+  ): Promise<PaginationResponse<Domain>> {
     const domains: Domain[] = await this.doServiceOperation(async () => {
       return await this.dbService.getDomainsByOwner(address, findOptions);
     });
@@ -55,7 +55,7 @@ export class MongoDomainService extends DomainService<MongoDbService> {
   async searchDomainsByName(
     searchTerm: string,
     findOptions: Maybe<DomainFindOptions>
-  ): Promise<DomainsApiResponse> {
+  ): Promise<PaginationResponse<Domain>> {
     const domains: Domain[] = await this.doServiceOperation(async () => {
       return await this.dbService.getDomainsByName(searchTerm, findOptions);
     });

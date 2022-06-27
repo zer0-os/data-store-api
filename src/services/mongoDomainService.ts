@@ -1,8 +1,7 @@
-import { Context, Logger } from "@azure/functions";
 import { Domain, DomainFindOptions, Maybe } from "@zero-tech/data-store-core";
 import { MongoDbService } from "@zero-tech/data-store-core/lib/database/mongo/mongoDbService";
 import { MongoClient } from "mongodb";
-import { PaginationResponse } from "../types";
+import { Logger, PaginationResponse } from "../types";
 import { DomainService } from "./domainService";
 
 //Remake to MONGODomainService implemented with mongo

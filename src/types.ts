@@ -1,4 +1,12 @@
-import { Domain } from "@zero-tech/data-store-core";
+import {
+  Address,
+  Domain,
+  DomainId,
+  Stamped,
+  UInt256,
+} from "@zero-tech/data-store-core";
+import { Time } from "@zero-tech/data-store-core/lib/shared/helpers/time";
+import { DomainHistory } from "@zero-tech/data-store-core/lib/shared/types/history";
 
 export interface PaginationResponse<T> {
   numResults: number;
@@ -8,6 +16,46 @@ export interface PaginationResponse<T> {
 export enum DomainSortDirection {
   desc = 0,
   asc = 1,
+}
+
+export interface DomainDto {
+  domainId: DomainId;
+  isRoot: boolean;
+  isValid: boolean;
+  registrar: Address;
+  label: string;
+  name: string;
+  parent: DomainId;
+  labelHash: string;
+  minter: Address;
+  owner: Address;
+  metadataUri: string;
+  royaltyAmount: UInt256;
+  locked: boolean;
+  lockedBy: Address;
+  created: Time;
+  children: DomainId[];
+  history: DomainHistory;
+}
+
+export interface ValidDomain {
+  domainId: DomainId;
+  isRoot: boolean;
+  isValid: boolean;
+  registrar: Address;
+  label: string;
+  name: string;
+  parent: DomainId;
+  labelHash: string;
+  minter: Address;
+  owner: Stamped<Address>;
+  metadataUri: Stamped<string>;
+  royaltyAmount: Stamped<UInt256>;
+  locked: Stamped<boolean>;
+  lockedBy: Stamped<Address>;
+  created: Time;
+  children: DomainId[];
+  history: DomainHistory;
 }
 
 /**

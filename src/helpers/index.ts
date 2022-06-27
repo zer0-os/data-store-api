@@ -1,5 +1,5 @@
 import { getDbConnectionInfo } from "@zero-tech/data-store-core/lib/database/helpers";
-import { Context } from "@azure/functions";
+import { Context, Logger } from "@azure/functions";
 import { MongoClient, MongoClientOptions } from "mongodb";
 import { MongoDbService } from "@zero-tech/data-store-core/lib/database/mongo/mongoDbService";
 import * as env from "env-var";
@@ -34,8 +34,8 @@ export function getDatabaseService(dbClient: MongoClient) {
   return MongoDbService.instance(dbClient, dbConnectionInfo);
 }
 
-export async function getMongoDomainService(context: Context) {
+export async function getMongoDomainService(logger: Logger) {
   const dbClient = await getConnectedDbClient();
   const dbService = getDatabaseService(dbClient);
-  return new MongoDomainService(dbClient, dbService, context);
+  return new MongoDomainService(dbClient, dbService, logger);
 }

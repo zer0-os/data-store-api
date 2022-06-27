@@ -19,7 +19,7 @@ const httpTrigger: AzureFunction = async function (
     }
 
     const findOptions = getDomainFindOptionsFromQuery(req);
-    const domainService = await getMongoDomainService(context);
+    const domainService = await getMongoDomainService(context.log);
     const response = await domainService.getSubdomains(
       req.params.id,
       findOptions
@@ -29,7 +29,7 @@ const httpTrigger: AzureFunction = async function (
     };
   } catch (err) {
     context.log.error(
-      `GET Subdomains, error encountered: `,
+      "GET Subdomains, error encountered: ",
       JSON.stringify(err)
     );
     context.res = createErrorResponse(err, context);

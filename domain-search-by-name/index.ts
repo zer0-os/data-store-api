@@ -14,7 +14,7 @@ const httpTrigger: AzureFunction = async function (
     const domainName: string = req.params.name;
 
     let findOptions = getDomainFindOptionsFromQuery(req);
-    const domainService = await getMongoDomainService(context);
+    const domainService = await getMongoDomainService(context.log);
     const response = await domainService.searchDomainsByName(
       domainName,
       findOptions
@@ -24,7 +24,7 @@ const httpTrigger: AzureFunction = async function (
     };
   } catch (err) {
     context.log.error(
-      `GET Domains by Name, error encountered: `,
+      "GET Domains by Name, error encountered: ",
       JSON.stringify(err)
     );
     context.res = createErrorResponse(err, context);

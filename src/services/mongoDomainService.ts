@@ -1,4 +1,4 @@
-import { Context } from "@azure/functions";
+import { Context, Logger } from "@azure/functions";
 import { Domain, DomainFindOptions, Maybe } from "@zero-tech/data-store-core";
 import { MongoDbService } from "@zero-tech/data-store-core/lib/database/mongo/mongoDbService";
 import { MongoClient } from "mongodb";
@@ -8,18 +8,18 @@ import { DomainService } from "./domainService";
 //Remake to MONGODomainService implemented with mongo
 export class MongoDomainService extends DomainService<MongoDbService> {
   dbClient: MongoClient;
-  context: Context;
-  constructor(client: MongoClient, service: MongoDbService, context: Context) {
+  logger: Logger;
+  constructor(client: MongoClient, service: MongoDbService, logger: Logger) {
     super(service);
     this.dbClient = client;
-    this.context = context;
+    this.logger = logger;
   }
 
   async listDomains(
     findOptions: Maybe<DomainFindOptions>
   ): Promise<PaginationResponse<Domain>> {
     const domains: Domain[] = await this.doServiceOperation(async () => {
-      this.context.log(`Listing all domains`, JSON.stringify(findOptions));
+      this.logger(`Listing all domains`, JSON.stringify(findOptions));
       return await this.dbService.getAllDomains(findOptions);
     });
     return this.domainsToDomainsResponse(domains);
@@ -30,7 +30,7 @@ export class MongoDomainService extends DomainService<MongoDbService> {
     findOptions: Maybe<DomainFindOptions>
   ): Promise<Domain> {
     const domain: Domain = await this.doServiceOperation(async () => {
-      this.context.log(`Getting domain ${id}`, JSON.stringify(findOptions));
+      this.logger(`Getting domain ${id}`, JSON.stringify(findOptions));
       return await this.dbService.getValidDomain(id, findOptions);
     });
     return domain;
@@ -41,10 +41,7 @@ export class MongoDomainService extends DomainService<MongoDbService> {
     findOptions: Maybe<DomainFindOptions>
   ): Promise<PaginationResponse<Domain>> {
     const domains: Domain[] = await this.doServiceOperation(async () => {
-      this.context.log(
-        `Getting subdomains for ${id}`,
-        JSON.stringify(findOptions)
-      );
+      this.logger(`Getting subdomains for ${id}`, JSON.stringify(findOptions));
       return await this.dbService.getSubdomainsById(id, findOptions);
     });
     return this.domainsToDomainsResponse(domains);
@@ -55,7 +52,7 @@ export class MongoDomainService extends DomainService<MongoDbService> {
     findOptions: Maybe<DomainFindOptions>
   ): Promise<PaginationResponse<Domain>> {
     const domains: Domain[] = await this.doServiceOperation(async () => {
-      this.context.log(
+      this.logger(
         `Searching domains by owner ${address}`,
         JSON.stringify(findOptions)
       );
@@ -69,7 +66,7 @@ export class MongoDomainService extends DomainService<MongoDbService> {
     findOptions: Maybe<DomainFindOptions>
   ): Promise<PaginationResponse<Domain>> {
     const domains: Domain[] = await this.doServiceOperation(async () => {
-      this.context.log(
+      this.logger(
         `Searching domains by name ${searchTerm}`,
         JSON.stringify(findOptions)
       );

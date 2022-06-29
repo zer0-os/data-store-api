@@ -49,11 +49,13 @@ export abstract class DomainService<T> {
       parent: domain.parent,
       labelHash: domain.labelHash,
       minter: domain.minter,
-      owner: domain.owner.value,
-      metadataUri: domain.metadataUri.value,
-      royaltyAmount: domain.royaltyAmount.value,
-      locked: domain.locked.value,
-      lockedBy: domain.lockedBy.value,
+      owner:
+        domain.owner?.value ?? "0x0000000000000000000000000000000000000000",
+      metadataUri: domain.metadataUri?.value ?? "",
+      royaltyAmount: domain.royaltyAmount?.value ?? "0",
+      locked: domain.locked?.value ?? false,
+      lockedBy:
+        domain.lockedBy?.value ?? "0x0000000000000000000000000000000000000000",
       created: domain.created,
       children: domain.children,
       history: domain.history,

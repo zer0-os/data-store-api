@@ -1,12 +1,12 @@
 {
   "bindings": [
     {
-      "route": "domains/search/owner/{address}",
+      "route": "v1/domains/search/owner/{address}",
       "authLevel": "anonymous",
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["post"]
+      "methods": ["get"]
     },
     {
       "type": "http",

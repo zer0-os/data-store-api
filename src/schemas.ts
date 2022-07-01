@@ -176,4 +176,4 @@ export const validateFindOptions = ajv
   .compile(domainFindOptions);
 
 export const validateDomainId = ajv.compile(domainId);
-export const validateBlockchainAddress = ajv.compile(blockchainAddress);
+export const validateAddress = ajv.compile(blockchainAddress);

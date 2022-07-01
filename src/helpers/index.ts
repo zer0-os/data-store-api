@@ -1,10 +1,11 @@
 import { getDbConnectionInfo } from "@zero-tech/data-store-core/lib/database/helpers";
-import { Context } from "@azure/functions";
+import { Context, Logger } from "@azure/functions";
 import { MongoClient, MongoClientOptions } from "mongodb";
 import { MongoDbService } from "@zero-tech/data-store-core/lib/database/mongo/mongoDbService";
 import * as env from "env-var";
+import { MongoDomainService } from "../services/mongoDomainService";
 
-export async function getConnectedDbClient(context: Context) {
+export async function getConnectedDbClient(context?: Context) {
   const dbUser = env.get("DATABASE_USERNAME").required().asString();
   const dbPassword = env.get("DATABASE_PASSWORD").required().asString();
   const dbUri = env.get("DATABASE_URI").required().asString();
@@ -31,4 +32,10 @@ export async function getConnectedDbClient(context: Context) {
 export function getDatabaseService(dbClient: MongoClient) {
   const dbConnectionInfo = getDbConnectionInfo();
   return MongoDbService.instance(dbClient, dbConnectionInfo);
+}
+
+export async function getMongoDomainService(logger: Logger) {
+  const dbClient = await getConnectedDbClient();
+  const dbService = getDatabaseService(dbClient);
+  return new MongoDomainService(dbClient, dbService, logger);
 }

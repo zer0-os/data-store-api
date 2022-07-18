@@ -1,6 +1,7 @@
 import { HttpRequestQuery } from "@azure/functions";
 import { DomainFindOptions } from "@zero-tech/data-store-core";
 import { PaginationResponse } from "../types";
+import * as constants from "../constants";
 
 /**
  * Transforms an array of objects into a paginated response payload
@@ -36,13 +37,14 @@ export function generatePaginationResponse<T>(
   if (results.length > 1) {
     results = results.slice(0, -1);
   }
+  const pageNumber = Math.abs(
+    limit > 0 && skip > 0 && skip > limit ? Math.ceil(skip / limit) : 1
+  );
   const response: PaginationResponse<T> = {
     results: results,
     pagination: {
       //Default to 1 as minimum page, otherwise round up to the nearest page
-      pageNumber: Math.abs(
-        limit > 0 && skip > 0 && skip > limit ? Math.ceil(skip / limit) : 1
-      ),
+      pageNumber: pageNumber,
       pageSize: limit,
       pageResults: results.length,
       links: {
@@ -104,10 +106,10 @@ function generateQueryString(
   reqLimit: number,
   next: boolean
 ): string {
-  const qSkip = query.get("skip") ?? 0;
+  const qSkip = query.get("skip") ?? constants.defaultSkip;
   query.delete("limit");
   query.delete("skip");
-  let skip = isNaN(+qSkip) ? 0 : +qSkip;
+  let skip = isNaN(+qSkip) ? constants.defaultSkip : +qSkip;
   if (next) {
     //Generate next page skip value
     skip = skip + reqLimit;
@@ -116,7 +118,7 @@ function generateQueryString(
     skip = skip - reqLimit;
   } else {
     //Previous page defaulted to beginning
-    skip = 0;
+    skip = constants.defaultSkip;
   }
   let queryString = `?limit=${reqLimit}&skip=${skip}`;
 

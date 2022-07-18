@@ -20,7 +20,7 @@ interface DynamicObject<T> {
  */
 export function getDomainFindOptionsFromQuery(
   req: HttpRequest,
-  pageable?: boolean
+  pageable = false
 ) {
   //Get variables to project, matching the case insensitive names to case sensitive object names
   const projection = createProjection(req);

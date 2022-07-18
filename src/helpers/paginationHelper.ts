@@ -37,9 +37,7 @@ export function generatePaginationResponse<T>(
   if (results.length > 1) {
     results = results.slice(0, -1);
   }
-  const pageNumber = Math.abs(
-    limit > 0 && skip > 0 && skip > limit ? Math.ceil(skip / limit) : 1
-  );
+  const pageNumber = limit ? Math.ceil(skip / limit) + 1 : 1;
   const response: PaginationResponse<T> = {
     results: results,
     pagination: {

@@ -58,6 +58,17 @@ export interface ValidDomain {
   history: DomainHistory;
 }
 
+export interface Logger {
+  /**
+   * Writes streaming function logs at the default trace level.
+   */
+  (...args: any[]): void;
+  /**
+   * Writes to error level logging or lower.
+   */
+  error(...args: any[]): void;
+}
+
 /**
  * If this ever fails to compile, initialize the missing variable with a default value
  */

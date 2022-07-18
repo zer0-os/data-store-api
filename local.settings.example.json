@@ -9,6 +9,7 @@
     "DATABASE_CONFIG": "Optional - Config options for the db, defaults to data-store-core default config",
     "DATABASE_URI_PREFIX": "Optional - URI prefix for the db, defaults to atlas db mongo prefix",
     "DATABASE_NAME": "The name of the database",
-    "DOMAIN_COLLECTION_NAME": "domains"
+    "DOMAIN_COLLECTION_NAME": "domains",
+    "APPLICATIONINSIGHTS_CONNECTION_STRING": "Application insights connection string from the Azure portal"
   }
 }

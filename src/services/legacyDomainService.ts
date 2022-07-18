@@ -27,8 +27,7 @@ export async function doServiceOperation(
       name: e.name ?? "Unknown Internal Server Error",
       message: e.message ?? "An unexpected server error occured.",
     };
-    context.log(e.name, e.message, e.stack);
-
+    context.log.error(error.name, error.message, e.stack);
     context.res = {
       status: 500,
       body: `${error.name} \n ${error.message}`,
@@ -49,6 +48,7 @@ export async function listDomains(
   if (request.body) {
     findOptions = request.body.options;
   }
+  context.log(`Listing all domains`, JSON.stringify(findOptions));
   const results = await dbService.getAllDomains(findOptions);
 
   const responseBody = {
@@ -68,6 +68,7 @@ export async function getDomain(
 ) {
   const domainId: DomainId = request.params.id;
   if (!validateDomainId(domainId)) {
+    context.log.warn(`Request Rejected due to: `, validateDomainId.errors);
     context.res = {
       status: 400,
       body: validateDomainId.errors,
@@ -79,7 +80,7 @@ export async function getDomain(
   if (request.body) {
     findOptions = request.body.options;
   }
-
+  context.log(`Getting domain ${domainId}`, JSON.stringify(findOptions));
   const result = await dbService.getValidDomain(request.params.id, findOptions);
 
   const responseBody = {
@@ -97,6 +98,7 @@ export async function getSubdomains(
 ) {
   const domainId: DomainId = request.params.id;
   if (!validateDomainId(domainId)) {
+    context.log.warn(`Request Rejected due to: `, validateDomainId.errors);
     context.res = {
       status: 400,
       body: validateDomainId.errors,
@@ -108,7 +110,10 @@ export async function getSubdomains(
   if (request.body) {
     findOptions = request.body.options;
   }
-
+  context.log(
+    `Getting subdomains for ${domainId}`,
+    JSON.stringify(findOptions)
+  );
   const results = await dbService.getSubdomainsById(
     request.params.id,
     findOptions
@@ -130,6 +135,7 @@ export async function searchDomainsByOwner(
 ) {
   const ownerAddress: Address = request.params.address;
   if (!validateAddress(ownerAddress)) {
+    context.log.warn(`Request Rejected due to: `, validateAddress.errors);
     context.res = {
       status: 400,
       body: validateAddress.errors,
@@ -141,7 +147,10 @@ export async function searchDomainsByOwner(
   if (request.body) {
     findOptions = request.body.options;
   }
-
+  context.log(
+    `Searching domains by owner ${ownerAddress}`,
+    JSON.stringify(findOptions)
+  );
   const results = await dbService.getDomainsByOwner(ownerAddress, findOptions);
 
   const responseBody = {
@@ -164,7 +173,10 @@ export async function searchDomainsByName(
   if (request.body) {
     findOptions = request.body.options;
   }
-
+  context.log(
+    `Searching domains by name ${domainName}`,
+    JSON.stringify(findOptions)
+  );
   const results = await dbService.getDomainsByName(domainName, findOptions);
 
   const responseBody = {

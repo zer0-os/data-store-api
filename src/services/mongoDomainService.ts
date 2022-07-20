@@ -1,7 +1,8 @@
-import { Domain, DomainFindOptions, Maybe } from "@zero-tech/data-store-core";
+import { Domain, Maybe, ValidDomain } from "@zero-tech/data-store-core";
 import { MongoDbService } from "@zero-tech/data-store-core/lib/database/mongo/mongoDbService";
+import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
 import { MongoClient } from "mongodb";
-import { DomainDto, Logger, PaginationResponse, ValidDomain } from "../types";
+import { DomainDto, Logger, PaginationResponse } from "../types";
 import { DomainService } from "./domainService";
 
 //Remake to MONGODomainService implemented with mongo
@@ -17,69 +18,61 @@ export class MongoDomainService extends DomainService<MongoDbService> {
   async listDomains(
     findOptions: Maybe<DomainFindOptions>
   ): Promise<PaginationResponse<DomainDto>> {
-    const domains: Domain[] = await this.doServiceOperation(async () => {
+    const domains: ValidDomain[] = await this.doServiceOperation(async () => {
       this.logger(`Listing all domains`, JSON.stringify(findOptions));
       return await this.dbService.getAllDomains(findOptions);
     });
-    return this.domainsToPaginationResponse(
-      domains as unknown as ValidDomain[]
-    );
+    return this.domainsToPaginationResponse(domains);
   }
 
   async getDomain(
     id: string,
     findOptions: Maybe<DomainFindOptions>
   ): Promise<DomainDto> {
-    const domain: Domain = await this.doServiceOperation(async () => {
+    const domain: ValidDomain = await this.doServiceOperation(async () => {
       this.logger(`Getting domain ${id}`, JSON.stringify(findOptions));
       return await this.dbService.getValidDomain(id, findOptions);
     });
-    return this.domainToDomainDto(domain as unknown as ValidDomain);
+    return this.validDomainToDomainDto(domain);
   }
 
   async getSubdomains(
     id: string,
     findOptions: Maybe<DomainFindOptions>
   ): Promise<PaginationResponse<DomainDto>> {
-    const domains: Domain[] = await this.doServiceOperation(async () => {
+    const domains: ValidDomain[] = await this.doServiceOperation(async () => {
       this.logger(`Getting subdomains for ${id}`, JSON.stringify(findOptions));
       return await this.dbService.getSubdomainsById(id, findOptions);
     });
-    return this.domainsToPaginationResponse(
-      domains as unknown as ValidDomain[]
-    );
+    return this.domainsToPaginationResponse(domains);
   }
 
   async searchDomainsByOwner(
     address: string,
     findOptions: Maybe<DomainFindOptions>
   ): Promise<PaginationResponse<DomainDto>> {
-    const domains: Domain[] = await this.doServiceOperation(async () => {
+    const domains: ValidDomain[] = await this.doServiceOperation(async () => {
       this.logger(
         `Searching domains by owner ${address}`,
         JSON.stringify(findOptions)
       );
       return await this.dbService.getDomainsByOwner(address, findOptions);
     });
-    return this.domainsToPaginationResponse(
-      domains as unknown as ValidDomain[]
-    );
+    return this.domainsToPaginationResponse(domains);
   }
 
   async searchDomainsByName(
     searchTerm: string,
     findOptions: Maybe<DomainFindOptions>
   ): Promise<PaginationResponse<DomainDto>> {
-    const domains: Domain[] = await this.doServiceOperation(async () => {
+    const domains: ValidDomain[] = await this.doServiceOperation(async () => {
       this.logger(
         `Searching domains by name ${searchTerm}`,
         JSON.stringify(findOptions)
       );
       return await this.dbService.getDomainsByName(searchTerm, findOptions);
     });
-    return this.domainsToPaginationResponse(
-      domains as unknown as ValidDomain[]
-    );
+    return this.domainsToPaginationResponse(domains);
   }
 
   async doServiceOperation(serviceFn: Function): Promise<any> {

@@ -1,5 +1,6 @@
-import { Domain, DomainFindOptions, Maybe } from "@zero-tech/data-store-core";
-import { DomainDto, PaginationResponse, ValidDomain } from "../types";
+import { Domain, Maybe, ValidDomain } from "@zero-tech/data-store-core";
+import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
+import { DomainDto, PaginationResponse } from "../types";
 
 export abstract class DomainService<T> {
   dbService: T;
@@ -30,7 +31,7 @@ export abstract class DomainService<T> {
   domainsToPaginationResponse(
     domains: ValidDomain[]
   ): PaginationResponse<DomainDto> {
-    const domainResponses = domains.map((x) => this.domainToDomainDto(x));
+    const domainResponses = domains.map((x) => this.validDomainToDomainDto(x));
     const response: PaginationResponse<DomainDto> = {
       numResults: domains.length,
       results: domainResponses,
@@ -38,7 +39,7 @@ export abstract class DomainService<T> {
     return response;
   }
 
-  domainToDomainDto(domain: ValidDomain): DomainDto {
+  validDomainToDomainDto(domain: ValidDomain): DomainDto {
     const response: DomainDto = {
       domainId: domain.domainId,
       isRoot: domain.isRoot,
@@ -49,16 +50,16 @@ export abstract class DomainService<T> {
       parent: domain.parent,
       labelHash: domain.labelHash,
       minter: domain.minter,
-      owner:
-        domain.owner?.value ?? "0x0000000000000000000000000000000000000000",
-      metadataUri: domain.metadataUri?.value ?? "",
-      royaltyAmount: domain.royaltyAmount?.value ?? "0",
-      locked: domain.locked?.value ?? false,
-      lockedBy:
-        domain.lockedBy?.value ?? "0x0000000000000000000000000000000000000000",
+      owner: domain.owner?.value,
+      metadataUri: domain.metadataUri?.value,
+      royaltyAmount: domain.royaltyAmount?.value,
+      locked: domain.locked?.value,
+      lockedBy: domain.lockedBy?.value,
       created: domain.created,
       children: domain.children,
       history: domain.history,
+      groupId: domain.groupId?.value,
+      groupFileIndex: domain.groupFileIndex,
     };
     return response;
   }

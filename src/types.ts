@@ -36,26 +36,8 @@ export interface DomainDto {
   created: Time;
   children: DomainId[];
   history: DomainHistory;
-}
-
-export interface ValidDomain {
-  domainId: DomainId;
-  isRoot: boolean;
-  isValid: boolean;
-  registrar: Address;
-  label: string;
-  name: string;
-  parent: DomainId;
-  labelHash: string;
-  minter: Address;
-  owner: Stamped<Address>;
-  metadataUri: Stamped<string>;
-  royaltyAmount: Stamped<UInt256>;
-  locked: Stamped<boolean>;
-  lockedBy: Stamped<Address>;
-  created: Time;
-  children: DomainId[];
-  history: DomainHistory;
+  groupId: UInt256;
+  groupFileIndex: UInt256;
 }
 
 export interface Logger {

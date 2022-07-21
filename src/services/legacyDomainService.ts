@@ -1,11 +1,7 @@
 import { Context, HttpRequest } from "@azure/functions";
-import {
-  Address,
-  DomainFindOptions,
-  DomainId,
-  Maybe,
-} from "@zero-tech/data-store-core";
+import { Address, DomainId, Maybe } from "@zero-tech/data-store-core";
 import { MongoDbService } from "@zero-tech/data-store-core/lib/database/mongo/mongoDbService";
+import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
 import { MongoClient } from "mongodb";
 import { getConnectedDbClient, getDatabaseService } from "../helpers";
 import { validateAddress, validateDomainId } from "../schemas";

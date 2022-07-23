@@ -1,7 +1,7 @@
 import { HttpRequestQuery } from "@azure/functions";
-import { DomainFindOptions } from "@zero-tech/data-store-core";
 import { PaginationResponse } from "../types";
 import * as constants from "../constants";
+import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
 
 /**
  * Transforms an array of objects into a paginated response payload

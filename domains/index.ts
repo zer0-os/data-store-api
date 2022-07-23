@@ -5,6 +5,7 @@ import { createErrorResponse } from "../src/helpers/createErrorResponse";
 import { getDomainFindOptionsFromQuery } from "../src/helpers/domainFindOptionsHelper";
 import { generatePaginationResponse } from "../src/helpers/paginationHelper";
 import * as constants from "../src/constants";
+import { DomainDto } from "../src/types";
 const httpTrigger: AzureFunction = async function (
   context: Context,
   req: HttpRequest
@@ -14,7 +15,7 @@ const httpTrigger: AzureFunction = async function (
     let findOptions = getDomainFindOptionsFromQuery(req, true);
     const domainService = await getMongoDomainService(context.log);
     const response = await domainService.listDomains(findOptions);
-    const paginationResponse = generatePaginationResponse<Domain>(
+    const paginationResponse = generatePaginationResponse<DomainDto>(
       response,
       findOptions.skip ?? constants.defaultSkip,
       findOptions.limit ?? constants.defaultLimit,

@@ -7,6 +7,7 @@ import { getDomainFindOptionsFromQuery } from "../src/helpers/domainFindOptionsH
 import { validateAddress } from "../src/schemas";
 import { generatePaginationResponse } from "../src/helpers/paginationHelper";
 import * as constants from "../src/constants";
+import { DomainDto } from "../src/types";
 
 const httpTrigger: AzureFunction = async function (
   context: Context,
@@ -29,7 +30,7 @@ const httpTrigger: AzureFunction = async function (
       findOptions
     );
 
-    const paginationResponse = generatePaginationResponse<Domain>(
+    const paginationResponse = generatePaginationResponse<DomainDto>(
       response,
       findOptions.skip ?? constants.defaultSkip,
       findOptions.limit ?? constants.defaultLimit,

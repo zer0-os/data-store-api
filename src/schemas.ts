@@ -1,4 +1,5 @@
-import { Address, DomainFindOptions, DomainId } from "@zero-tech/data-store-core";
+import { Address, DomainId } from "@zero-tech/data-store-core";
+import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
 import Ajv, { JSONSchemaType } from "ajv";
 import { PartialSchema } from "ajv/dist/types/json-schema";
 

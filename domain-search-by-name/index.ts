@@ -1,10 +1,10 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
-import { Domain } from "@zero-tech/data-store-core";
 import { getMongoDomainService } from "../src/helpers";
 import { createErrorResponse } from "../src/helpers/createErrorResponse";
 import { getDomainFindOptionsFromQuery } from "../src/helpers/domainFindOptionsHelper";
 import { generatePaginationResponse } from "../src/helpers/paginationHelper";
 import * as constants from "../src/constants";
+import { DomainDto } from "../src/types";
 
 const httpTrigger: AzureFunction = async function (
   context: Context,
@@ -22,7 +22,7 @@ const httpTrigger: AzureFunction = async function (
       domainName,
       findOptions
     );
-    const paginationResponse = generatePaginationResponse<Domain>(
+    const paginationResponse = generatePaginationResponse<DomainDto>(
       response,
       findOptions.skip ?? constants.defaultSkip,
       findOptions.limit ?? constants.defaultLimit,

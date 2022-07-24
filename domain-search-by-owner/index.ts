@@ -1,10 +1,13 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
-import { Address } from "@zero-tech/data-store-core";
+import { Address, Domain } from "@zero-tech/data-store-core";
 import { getMongoDomainService } from "../src/helpers";
 import { createErrorResponse } from "../src/helpers/createErrorResponse";
 import { createHTTPResponse } from "../src/helpers/createHTTPResponse";
 import { getDomainFindOptionsFromQuery } from "../src/helpers/domainFindOptionsHelper";
 import { validateAddress } from "../src/schemas";
+import { generatePaginationResponse } from "../src/helpers/paginationHelper";
+import * as constants from "../src/constants";
+import { DomainDto } from "../src/types";
 
 const httpTrigger: AzureFunction = async function (
   context: Context,
@@ -20,14 +23,22 @@ const httpTrigger: AzureFunction = async function (
       return;
     }
 
-    let findOptions = getDomainFindOptionsFromQuery(req);
+    let findOptions = getDomainFindOptionsFromQuery(req, true);
     const domainService = await getMongoDomainService(context.log);
     const response = await domainService.searchDomainsByOwner(
       ownerAddress,
       findOptions
     );
+
+    const paginationResponse = generatePaginationResponse<DomainDto>(
+      response,
+      findOptions.skip ?? constants.defaultSkip,
+      findOptions.limit ?? constants.defaultLimit,
+      req.query,
+      constants.routes.v1.searchDomainsByOwner + ownerAddress
+    );
     context.res = {
-      body: response,
+      body: paginationResponse,
     };
   } catch (err) {
     context.log.error(

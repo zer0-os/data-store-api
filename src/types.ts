@@ -8,9 +8,19 @@ import {
 import { Time } from "@zero-tech/data-store-core/lib/shared/helpers/time";
 import { DomainHistory } from "@zero-tech/data-store-core/lib/shared/types/history";
 
+export type Sort = -1 | 1;
+export type Projection = 0 | 1;
 export interface PaginationResponse<T> {
-  numResults: number;
   results: T[];
+  pagination: {
+    pageNumber: number;
+    pageSize: number;
+    pageResults: number;
+    links: {
+      next: string;
+      previous: string;
+    };
+  };
 }
 
 export enum DomainSortDirection {

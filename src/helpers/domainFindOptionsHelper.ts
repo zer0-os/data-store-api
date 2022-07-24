@@ -2,27 +2,31 @@ import { HttpRequest } from "@azure/functions";
 import { SortDirection } from "mongodb";
 import { DomainSortDirection, domainReflectionSchema } from "../types";
 import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
+import * as constants from "../../src/constants";
+import { generatePageableFindOptions } from "./paginationHelper";
+
 declare type Sort = -1 | 1;
 interface DynamicObject<T> {
   [key: string]: T;
 }
-
-const defaultSort = ["label"];
-const defaultSortDirection: Sort[] = [-1];
 
 /*
  * Generates a DomainFindOptions object based on query string parameters
  * @param req - An HttpRequest
  * @returns  - a DomainFindOptions object, with either default values or values supplied from the query string
  */
-export function getDomainFindOptionsFromQuery(req: HttpRequest) {
+export function getDomainFindOptionsFromQuery(
+  req: HttpRequest,
+  pageable = false
+) {
   const sort = createSort(req);
 
   let findOptions: DomainFindOptions = {
     sort: sort,
-    limit: isNaN(+req.query.limit) ? 100 : +req.query.limit, //Setting limit to 0 will return all entries
-    skip: isNaN(+req.query.skip) ? 0 : +req.query.skip,
+    limit: isNaN(+req.query.limit) ? constants.defaultLimit : +req.query.limit, //Setting limit to 0 will return all entries
+    skip: isNaN(+req.query.skip) ? constants.defaultSkip : +req.query.skip,
   };
+  if (pageable) findOptions = generatePageableFindOptions(findOptions);
   return findOptions;
 }
 
@@ -37,8 +41,8 @@ export function valueToSortDirection(val: DomainSortDirection): Sort {
  * @returns  - a DomainSortOptions object
  */
 export function createSort(req: HttpRequest): DynamicObject<SortDirection> {
-  let sortValues = defaultSort;
-  let sortDirection = defaultSortDirection;
+  let sortValues = constants.defaultSort;
+  let sortDirection = constants.defaultSortDirection;
   if (req.query) {
     if (req.query.sort) {
       sortValues = req.query.sort

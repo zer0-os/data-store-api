@@ -5,7 +5,6 @@ import { MongoClient } from "mongodb";
 import { DomainDto, Logger, PaginationResponse } from "../types";
 import { DomainService } from "./domainService";
 
-//Remake to MONGODomainService implemented with mongo
 export class MongoDomainService extends DomainService<MongoDbService> {
   dbClient: MongoClient;
   logger: Logger;
@@ -17,12 +16,12 @@ export class MongoDomainService extends DomainService<MongoDbService> {
 
   async listDomains(
     findOptions: Maybe<DomainFindOptions>
-  ): Promise<PaginationResponse<DomainDto>> {
+  ): Promise<DomainDto[]> {
     const domains: ValidDomain[] = await this.doServiceOperation(async () => {
       this.logger(`Listing all domains`, JSON.stringify(findOptions));
       return await this.dbService.getAllDomains(findOptions);
     });
-    return this.domainsToPaginationResponse(domains);
+    return domains.map((x) => this.validDomainToDomainDto(x));
   }
 
   async getDomain(
@@ -39,18 +38,18 @@ export class MongoDomainService extends DomainService<MongoDbService> {
   async getSubdomains(
     id: string,
     findOptions: Maybe<DomainFindOptions>
-  ): Promise<PaginationResponse<DomainDto>> {
+  ): Promise<DomainDto[]> {
     const domains: ValidDomain[] = await this.doServiceOperation(async () => {
       this.logger(`Getting subdomains for ${id}`, JSON.stringify(findOptions));
       return await this.dbService.getSubdomainsById(id, findOptions);
     });
-    return this.domainsToPaginationResponse(domains);
+    return domains.map((x) => this.validDomainToDomainDto(x));
   }
 
   async searchDomainsByOwner(
     address: string,
     findOptions: Maybe<DomainFindOptions>
-  ): Promise<PaginationResponse<DomainDto>> {
+  ): Promise<DomainDto[]> {
     const domains: ValidDomain[] = await this.doServiceOperation(async () => {
       this.logger(
         `Searching domains by owner ${address}`,
@@ -58,13 +57,13 @@ export class MongoDomainService extends DomainService<MongoDbService> {
       );
       return await this.dbService.getDomainsByOwner(address, findOptions);
     });
-    return this.domainsToPaginationResponse(domains);
+    return domains.map((x) => this.validDomainToDomainDto(x));
   }
 
   async searchDomainsByName(
     searchTerm: string,
     findOptions: Maybe<DomainFindOptions>
-  ): Promise<PaginationResponse<DomainDto>> {
+  ): Promise<DomainDto[]> {
     const domains: ValidDomain[] = await this.doServiceOperation(async () => {
       this.logger(
         `Searching domains by name ${searchTerm}`,
@@ -72,7 +71,7 @@ export class MongoDomainService extends DomainService<MongoDbService> {
       );
       return await this.dbService.getDomainsByName(searchTerm, findOptions);
     });
-    return this.domainsToPaginationResponse(domains);
+    return domains.map((x) => this.validDomainToDomainDto(x));
   }
 
   async doServiceOperation(serviceFn: Function): Promise<any> {

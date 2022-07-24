@@ -2,6 +2,9 @@ import { AzureFunction, Context, HttpRequest } from "@azure/functions";
 import { getMongoDomainService } from "../src/helpers";
 import { createErrorResponse } from "../src/helpers/createErrorResponse";
 import { getDomainFindOptionsFromQuery } from "../src/helpers/domainFindOptionsHelper";
+import { generatePaginationResponse } from "../src/helpers/paginationHelper";
+import * as constants from "../src/constants";
+import { DomainDto } from "../src/types";
 
 const httpTrigger: AzureFunction = async function (
   context: Context,
@@ -13,14 +16,21 @@ const httpTrigger: AzureFunction = async function (
     );
     const domainName: string = req.params.name;
 
-    let findOptions = getDomainFindOptionsFromQuery(req);
+    let findOptions = getDomainFindOptionsFromQuery(req, true);
     const domainService = await getMongoDomainService(context.log);
     const response = await domainService.searchDomainsByName(
       domainName,
       findOptions
     );
+    const paginationResponse = generatePaginationResponse<DomainDto>(
+      response,
+      findOptions.skip ?? constants.defaultSkip,
+      findOptions.limit ?? constants.defaultLimit,
+      req.query,
+      constants.routes.v1.searchDomainsByName + domainName
+    );
     context.res = {
-      body: response,
+      body: paginationResponse,
     };
   } catch (err) {
     context.log.error(

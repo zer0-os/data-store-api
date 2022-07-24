@@ -9,7 +9,7 @@ export abstract class DomainService<T> {
   }
   abstract listDomains(
     findOptions: Maybe<DomainFindOptions>
-  ): Promise<PaginationResponse<DomainDto>>;
+  ): Promise<DomainDto[]>;
   abstract getDomain(
     id: string,
     findOptions: Maybe<DomainFindOptions>
@@ -17,27 +17,16 @@ export abstract class DomainService<T> {
   abstract getSubdomains(
     id: string,
     findOptions: Maybe<DomainFindOptions>
-  ): Promise<PaginationResponse<DomainDto>>;
+  ): Promise<DomainDto[]>;
   abstract searchDomainsByOwner(
     address: string,
     findOptions: Maybe<DomainFindOptions>
-  ): Promise<PaginationResponse<DomainDto>>;
+  ): Promise<DomainDto[]>;
   abstract searchDomainsByName(
     searchTerm: string,
     findOptions: Maybe<DomainFindOptions>
-  ): Promise<PaginationResponse<DomainDto>>;
+  ): Promise<DomainDto[]>;
   abstract doServiceOperation(serviceFn: Function): Promise<Domain[] | Domain>;
-
-  domainsToPaginationResponse(
-    domains: ValidDomain[]
-  ): PaginationResponse<DomainDto> {
-    const domainResponses = domains.map((x) => this.validDomainToDomainDto(x));
-    const response: PaginationResponse<DomainDto> = {
-      numResults: domains.length,
-      results: domainResponses,
-    };
-    return response;
-  }
 
   validDomainToDomainDto(domain: ValidDomain): DomainDto {
     const response: DomainDto = {

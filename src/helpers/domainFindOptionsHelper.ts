@@ -10,9 +10,6 @@ interface DynamicObject<T> {
   [key: string]: T;
 }
 
-const defaultSort = ["label"];
-const defaultSortDirection: Sort[] = [-1];
-
 /*
  * Generates a DomainFindOptions object based on query string parameters
  * @param req - An HttpRequest

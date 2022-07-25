@@ -1,5 +1,4 @@
 import { HttpRequest } from "@azure/functions";
-import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
 import { SortDirection } from "mongodb";
 import { DomainSortDirection, domainReflectionSchema } from "../types";
 import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";

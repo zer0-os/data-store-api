@@ -1,5 +1,6 @@
-import { Domain, DomainFindOptions, Maybe } from "@zero-tech/data-store-core";
+import { Domain, Maybe } from "@zero-tech/data-store-core";
 import { MongoDbService } from "@zero-tech/data-store-core/lib/database/mongo/mongoDbService";
+import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
 import { MongoClient } from "mongodb";
 import { Logger, PaginationResponse } from "../types";
 import { DomainService } from "./domainService";

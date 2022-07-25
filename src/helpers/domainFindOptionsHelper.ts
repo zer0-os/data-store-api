@@ -1,6 +1,6 @@
 import { HttpRequest } from "@azure/functions";
+import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
 import { SortDirection } from "mongodb";
-import { DomainFindOptions } from "@zero-tech/data-store-core";
 import { DomainSortDirection, domainReflectionSchema } from "../types";
 declare type Sort = -1 | 1;
 declare type Projection = 0 | 1;

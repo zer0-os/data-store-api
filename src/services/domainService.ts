@@ -1,4 +1,5 @@
-import { Domain, DomainFindOptions, Maybe } from "@zero-tech/data-store-core";
+import { Domain, Maybe } from "@zero-tech/data-store-core";
+import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
 import { PaginationResponse } from "../types";
 
 export abstract class DomainService<T> {

@@ -2,6 +2,7 @@ import { Domain, Maybe, ValidDomain } from "@zero-tech/data-store-core";
 import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
 import { DomainDto, PaginationResponse } from "../types";
 
+
 export abstract class DomainService<T> {
   dbService: T;
   constructor(service: T) {

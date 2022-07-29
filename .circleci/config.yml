@@ -31,35 +31,6 @@ jobs:
           root: ~/project
           paths:
             - .
-
-  deploy-rinkeby:
-    executor: node/default
-    working_directory: ~/project
-    steps:
-      - attach_workspace:
-          at: ~/project
-      - azure-cli/install
-      - azure-cli/login-with-service-principal
-      - run:
-          name: Install Azure functions tools
-          command: sudo npm i -g azure-functions-core-tools@4 --unsafe-perm true
-      - run:
-          name: Deploy to Azure function App
-          command: func azure functionapp publish af-datastore-api-rinkeby-prod --typescript
-  deploy-mainnet:
-    executor: node/default
-    working_directory: ~/project
-    steps:
-      - attach_workspace:
-          at: ~/project
-      - azure-cli/install
-      - azure-cli/login-with-service-principal
-      - run:
-          name: Install Azure functions tools
-          command: sudo npm i -g azure-functions-core-tools@4 --unsafe-perm true
-      - run:
-          name: Deploy to Azure function App
-          command: func azure functionapp publish af-datastore-api-rinkeby-prod --typescript
   test:
     <<: *defaults
     steps:
@@ -99,20 +70,6 @@ workflows:
   build-and-deploy:
     jobs:
       - build
-      - deploy-rinkeby:
-          requires:
-            - build
-          filters:
-            branches:
-              only: develop
-      - deploy-mainnet:
-          requires:
-            - build
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
   test:
     jobs:
       - test:

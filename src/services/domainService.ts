@@ -33,7 +33,7 @@ export abstract class DomainService<T> {
   abstract doServiceOperation(serviceFn: Function): Promise<Domain[] | Domain>;
 
   validDomainToDomainDto(domain: ValidDomain): DomainDto {
-    const response: any = {
+    const response: DomainDto = {
       domainId: domain.domainId,
       isRoot: domain.isRoot,
       isValid: domain.isValid,

@@ -1,7 +1,6 @@
 import { Domain, Maybe, ValidDomain } from "@zero-tech/data-store-core";
 import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
-import { DomainDto, PaginationResponse } from "../types";
-
+import { DomainDto } from "../types";
 
 export abstract class DomainService<T> {
   dbService: T;
@@ -19,6 +18,10 @@ export abstract class DomainService<T> {
     id: string,
     findOptions: Maybe<DomainFindOptions>
   ): Promise<DomainDto[]>;
+  abstract getSubdomainsDeep(
+    id: string,
+    findOptions: Maybe<DomainFindOptions>
+  ): Promise<DomainDto[]>;
   abstract searchDomainsByOwner(
     address: string,
     findOptions: Maybe<DomainFindOptions>
@@ -30,7 +33,7 @@ export abstract class DomainService<T> {
   abstract doServiceOperation(serviceFn: Function): Promise<Domain[] | Domain>;
 
   validDomainToDomainDto(domain: ValidDomain): DomainDto {
-    const response: DomainDto = {
+    const response: any = {
       domainId: domain.domainId,
       isRoot: domain.isRoot,
       isValid: domain.isValid,

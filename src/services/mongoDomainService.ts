@@ -46,6 +46,17 @@ export class MongoDomainService extends DomainService<MongoDbService> {
     return domains.map((x) => this.validDomainToDomainDto(x));
   }
 
+  async getSubdomainsDeep(
+    id: string
+  ): Promise<DomainDto[]> {
+    const domains: ValidDomain[] = await this.doServiceOperation(async () => {
+      this.logger(`Getting deep subdomains for ${id}`);
+      return await this.dbService.getSubdomainsById(id);
+    });
+
+    return domains.map((domain) => this.validDomainToDomainDto(domain));
+  }
+
   async searchDomainsByOwner(
     address: string,
     findOptions: Maybe<DomainFindOptions>

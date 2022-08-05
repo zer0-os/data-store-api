@@ -23,7 +23,7 @@ export interface PaginationResponse<T> {
   };
 }
 
-export enum DomainSortDirection {
+export enum QueryParamSortDirection {
   desc = 0,
   asc = 1,
 }

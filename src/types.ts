@@ -6,7 +6,7 @@ import {
   UInt256,
 } from "@zero-tech/data-store-core";
 import { Time } from "@zero-tech/data-store-core/lib/shared/helpers/time";
-import { DomainHistory } from "@zero-tech/data-store-core/lib/shared/types/history";
+import { History } from "@zero-tech/data-store-core/lib/shared/types/history";
 
 export type Sort = -1 | 1;
 export type Projection = 0 | 1;
@@ -45,7 +45,7 @@ export interface DomainDto {
   lockedBy: Address;
   created: Time;
   children: DomainId[];
-  history: DomainHistory;
+  history: History[];
   groupId: UInt256;
   groupFileIndex: UInt256;
 }
@@ -68,9 +68,7 @@ export const domainReflectionSchema: Domain = {
   domainId: "",
   isRoot: false,
   children: [],
-  history: {
-    transfers: [],
-  },
+  history: [],
   label: undefined,
   name: undefined,
   parent: undefined,

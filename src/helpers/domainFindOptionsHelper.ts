@@ -1,11 +1,10 @@
 import { HttpRequest } from "@azure/functions";
-import { SortDirection } from "mongodb";
-import { DomainSortDirection, domainReflectionSchema } from "../types";
+import { QueryParamSortDirection, domainReflectionSchema } from "../types";
 import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
+import { SortDirection } from "@zero-tech/data-store-core/lib/shared/types/findOptions"
 import * as constants from "../../src/constants";
 import { generatePageableFindOptions } from "./paginationHelper";
 
-declare type Sort = -1 | 1;
 interface DynamicObject<T> {
   [key: string]: T;
 }
@@ -31,8 +30,8 @@ export function getDomainFindOptionsFromQuery(
 }
 
 //Converting Number to either 1 or -1
-export function valueToSortDirection(val: DomainSortDirection): Sort {
-  return Number(val) === DomainSortDirection.desc ? -1 : 1;
+export function valueToSortDirection(val: QueryParamSortDirection): SortDirection {
+  return Number(val) === QueryParamSortDirection.desc ? -1 : 1;
 }
 
 /**
@@ -54,9 +53,9 @@ export function createSort(req: HttpRequest): DynamicObject<SortDirection> {
         .split(",")
         .map((val) =>
           valueToSortDirection(
-            DomainSortDirection[
-              val.toLowerCase() as keyof typeof DomainSortDirection
-            ] ?? DomainSortDirection.desc
+            QueryParamSortDirection[
+              val.toLowerCase() as keyof typeof QueryParamSortDirection
+            ] ?? QueryParamSortDirection.desc
           )
         );
     }

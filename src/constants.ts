@@ -10,6 +10,7 @@ export const routes = {
     searchDomainsByName: "v1/domains/search/name/",
     searchDomainsByOwner: "v1/domains/search/owner/",
     getSubdomainsById: "v1/domains/subdomains/",
+    getSubdomainsByIdDeep: "v1/domains/subdomains/deep",
     getDomainsById: "v1/domains/get/",
   },
 };

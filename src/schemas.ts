@@ -164,7 +164,6 @@ const domainFindOptions: JSONSchemaType<DomainFindOptions> = {
     limit: { type: "number", minimum: 1 },
     skip: { type: "number", minimum: 1 },
     sort: { $ref: "domainSortOptions#/definitions/sort" },
-    projection: { $ref: "domainProjectionOptions#/definitions/projection" },
   },
   /* eslint-enable @typescript-eslint/ban-ts-comment */
   additionalProperties: false,

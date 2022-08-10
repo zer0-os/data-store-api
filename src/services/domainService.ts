@@ -1,7 +1,6 @@
 import { Domain, Maybe, ValidDomain } from "@zero-tech/data-store-core";
 import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
-import { DomainDto, PaginationResponse } from "../types";
-
+import { DomainDto } from "../types";
 
 export abstract class DomainService<T> {
   dbService: T;
@@ -16,6 +15,10 @@ export abstract class DomainService<T> {
     findOptions: Maybe<DomainFindOptions>
   ): Promise<DomainDto>;
   abstract getSubdomains(
+    id: string,
+    findOptions: Maybe<DomainFindOptions>
+  ): Promise<DomainDto[]>;
+  abstract getSubdomainsDeep(
     id: string,
     findOptions: Maybe<DomainFindOptions>
   ): Promise<DomainDto[]>;

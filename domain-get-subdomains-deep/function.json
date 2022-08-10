@@ -1,0 +1,18 @@
+{
+  "bindings": [
+    {
+      "route": "v1/domains/subdomains/deep/{id}",
+      "authLevel": "anonymous",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "req",
+      "methods": ["get"]
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "res"
+    }
+  ],
+  "scriptFile": "../dist/domain-get-subdomains/index.js"
+}

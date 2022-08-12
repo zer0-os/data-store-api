@@ -1,4 +1,4 @@
-import { Domain, Maybe, ValidDomain } from "@zero-tech/data-store-core";
+import { Domain, DomainSortOptions, Maybe, ValidDomain } from "@zero-tech/data-store-core";
 import { MongoDbService } from "@zero-tech/data-store-core/lib/database/mongo/mongoDbService";
 import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
 import { MongoClient } from "mongodb";
@@ -47,11 +47,12 @@ export class MongoDomainService extends DomainService<MongoDbService> {
   }
 
   async getSubdomainsDeep(
-    id: string
+    id: string,
+    findOptions: DomainFindOptions
   ): Promise<DomainDto[]> {
     const domains: ValidDomain[] = await this.doServiceOperation(async () => {
-      this.logger(`Getting deep subdomains for ${id}`);
-      return await this.dbService.getSubdomainsById(id);
+      this.logger(`Getting deep subdomains for ${id}`, JSON.stringify(findOptions));
+      return await this.dbService.getSubdomainsByIdDeep(id, findOptions);
     });
 
     return domains.map((domain) => this.validDomainToDomainDto(domain));

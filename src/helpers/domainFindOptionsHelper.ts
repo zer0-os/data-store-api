@@ -1,7 +1,7 @@
 import { HttpRequest } from "@azure/functions";
 import { QueryParamSortDirection, domainReflectionSchema } from "../types";
 import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
-import { SortDirection } from "@zero-tech/data-store-core/lib/shared/types/findOptions"
+import { SortDirection } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
 import * as constants from "../../src/constants";
 import { generatePageableFindOptions } from "./paginationHelper";
 
@@ -17,7 +17,7 @@ interface DynamicObject<T> {
 export function getDomainFindOptionsFromQuery(
   req: HttpRequest,
   pageable = false
-) {
+): DomainFindOptions {
   const sort = createSort(req);
 
   let findOptions: DomainFindOptions = {
@@ -30,7 +30,9 @@ export function getDomainFindOptionsFromQuery(
 }
 
 //Converting Number to either 1 or -1
-export function valueToSortDirection(val: QueryParamSortDirection): SortDirection {
+export function valueToSortDirection(
+  val: QueryParamSortDirection
+): SortDirection {
   return Number(val) === QueryParamSortDirection.desc ? -1 : 1;
 }
 
@@ -81,8 +83,23 @@ export function createSortDynamicObject(
     return sortValues.indexOf(item) === index;
   });
   sortValues.forEach((x, index) => {
-    sort[x] = sortDirections[index] !== undefined ? sortDirections[index] : -1;
+    if (x === "created") {
+      const createdTimestamp = `${x}.timestamp`;
+      const createdBlockNumber = `${x}.blockNumber`;
+      const createdLogIndex = `${x}.logIndex`;
+
+      sort[createdTimestamp] =
+        sortDirections[index] !== undefined ? sortDirections[index] : -1;
+      sort[createdBlockNumber] =
+        sortDirections[index] !== undefined ? sortDirections[index] : -1;
+      sort[createdLogIndex] =
+        sortDirections[index] !== undefined ? sortDirections[index] : -1;
+    } else {
+      sort[x] =
+        sortDirections[index] !== undefined ? sortDirections[index] : -1;
+    }
   });
+
   return sort;
 }
 

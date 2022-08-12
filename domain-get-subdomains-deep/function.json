@@ -14,5 +14,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/domain-get-subdomains/index.js"
+  "scriptFile": "../dist/domain-get-subdomains-deep/index.js"
 }

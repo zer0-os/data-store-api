@@ -53,6 +53,7 @@ export abstract class DomainService<T> {
       history: domain.history,
       groupId: domain.groupId.value,
       groupFileIndex: domain.groupFileIndex,
+      buyNow: domain.buyNow.value
     };
     return response;
   }

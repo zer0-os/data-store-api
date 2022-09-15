@@ -94,6 +94,9 @@ export function createSortDynamicObject(
         sortDirections[index] !== undefined ? sortDirections[index] : -1;
       sort[createdLogIndex] =
         sortDirections[index] !== undefined ? sortDirections[index] : -1;
+    } else if (x === "buyNow") {
+      const priceFieldPath = "buyNow.value.activeListing.price"
+      sort[priceFieldPath] = sortDirections[index] !== undefined ? sortDirections[index] : -1;
     } else {
       sort[x] =
         sortDirections[index] !== undefined ? sortDirections[index] : -1;

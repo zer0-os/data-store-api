@@ -1,5 +1,6 @@
 import {
   Address,
+  BuyNow,
   Domain,
   DomainId,
   Stamped,
@@ -48,6 +49,7 @@ export interface DomainDto {
   history: History[];
   groupId: UInt256;
   groupFileIndex: UInt256;
+  buyNow: BuyNow
 }
 
 export interface Logger {
@@ -82,4 +84,5 @@ export const domainReflectionSchema: Domain = {
   created: undefined,
   registrar: undefined,
   isValid: false,
+  buyNow: undefined
 };

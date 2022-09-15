@@ -116,6 +116,13 @@ const domainSortOptionsDef: PartialSchema<DomainFindOptions> = {
             { type: "number", minimum: -1, maximum: -1 },
           ],
         },
+        buyNow: {
+          type: "number",
+          oneOf: [
+            { type: "number", minimum: 1, maximum: 1 },
+            { type: "number", minimum: -1, maximum: -1 },
+          ],
+        },
       },
       additionalProperties: false,
     },

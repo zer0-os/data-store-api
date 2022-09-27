@@ -1,13 +1,17 @@
+import { AddressZero, EtherSymbol, HashZero } from "@ethersproject/constants";
 import {
   Address,
   BuyNow,
   Domain,
   DomainId,
-  Stamped,
   UInt256,
 } from "@zero-tech/data-store-core";
 import { Time } from "@zero-tech/data-store-core/lib/shared/helpers/time";
 import { History } from "@zero-tech/data-store-core/lib/shared/types/history";
+import {
+  noBuyNowListing,
+  defaultValueMessageTime,
+} from "@zero-tech/data-store-core/lib/aggregator/constants";
 
 export type Sort = -1 | 1;
 export type Projection = 0 | 1;
@@ -49,7 +53,7 @@ export interface DomainDto {
   history: History[];
   groupId: UInt256;
   groupFileIndex: UInt256;
-  buyNow: BuyNow
+  buyNow: BuyNow;
 }
 
 export interface Logger {
@@ -84,5 +88,11 @@ export const domainReflectionSchema: Domain = {
   created: undefined,
   registrar: undefined,
   isValid: false,
-  buyNow: undefined
+  buyNow: {
+    value: {
+      listing: noBuyNowListing,
+      isActive: false,
+    },
+    time: defaultValueMessageTime,
+  },
 };

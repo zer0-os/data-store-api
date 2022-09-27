@@ -16,7 +16,7 @@ export async function doServiceOperation(
 
   try {
     dbClient = await getConnectedDbClient(context);
-    const dbService: MongoDbService = getDatabaseService(dbClient);
+    const dbService: MongoDbService = await getDatabaseService(dbClient);
     await serviceFn(context, request, dbService);
   } catch (e: any) {
     const error: Error = {

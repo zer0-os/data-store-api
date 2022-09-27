@@ -29,13 +29,14 @@ export async function getConnectedDbClient(context?: Context) {
   return dbClient;
 }
 
-export function getDatabaseService(dbClient: MongoClient) {
+export async function getDatabaseService(dbClient: MongoClient) {
   const dbConnectionInfo = getDbConnectionInfo();
-  return MongoDbService.instance(dbClient, dbConnectionInfo);
+  const serviceInstance = MongoDbService.instance(dbClient, dbConnectionInfo);
+  return serviceInstance;
 }
 
 export async function getMongoDomainService(logger: Logger) {
   const dbClient = await getConnectedDbClient();
-  const dbService = getDatabaseService(dbClient);
+  const dbService = await getDatabaseService(dbClient);
   return new MongoDomainService(dbClient, dbService, logger);
 }

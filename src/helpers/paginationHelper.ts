@@ -121,7 +121,7 @@ function generateQueryString(
   let queryString = `?limit=${reqLimit}&skip=${skip}`;
 
   //Populate the remaining query string parameters
-  for (let [key, value] of query) {
+  for (const [key, value] of query) {
     queryString += `&${key}=${value}`;
   }
   return queryString;

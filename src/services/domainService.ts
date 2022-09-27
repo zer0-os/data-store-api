@@ -13,7 +13,7 @@ export abstract class DomainService<T> {
   abstract getDomain(
     id: string,
     findOptions: Maybe<DomainFindOptions>
-  ): Promise<DomainDto>;
+  ): Promise<Maybe<DomainDto>>;
   abstract getSubdomains(
     id: string,
     findOptions: Maybe<DomainFindOptions>
@@ -53,6 +53,7 @@ export abstract class DomainService<T> {
       history: domain.history,
       groupId: domain.groupId.value,
       groupFileIndex: domain.groupFileIndex,
+      buyNow: domain.buyNow.value,
     };
     return response;
   }

@@ -78,7 +78,7 @@ export function createSortDynamicObject(
   sortValues: string[],
   sortDirections: SortDirection[]
 ): DynamicObject<SortDirection> {
-  let sort: DynamicObject<SortDirection> = {};
+  const sort: DynamicObject<SortDirection> = {};
   sortValues = sortValues.filter((item, index) => {
     return sortValues.indexOf(item) === index;
   });
@@ -93,6 +93,11 @@ export function createSortDynamicObject(
       sort[createdBlockNumber] =
         sortDirections[index] !== undefined ? sortDirections[index] : -1;
       sort[createdLogIndex] =
+        sortDirections[index] !== undefined ? sortDirections[index] : -1;
+    } else if (x === "buyNow") {
+      const priceFieldPath = "buyNow.value.listing.price";
+
+      sort[priceFieldPath] =
         sortDirections[index] !== undefined ? sortDirections[index] : -1;
     } else {
       sort[x] =

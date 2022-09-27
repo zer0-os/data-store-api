@@ -1,4 +1,7 @@
-import { Domain, DomainSortOptions, Maybe, ValidDomain } from "@zero-tech/data-store-core";
+import {
+  Maybe,
+  ValidDomain,
+} from "@zero-tech/data-store-core";
 import { MongoDbService } from "@zero-tech/data-store-core/lib/database/mongo/mongoDbService";
 import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
 import { MongoClient } from "mongodb";
@@ -27,12 +30,17 @@ export class MongoDomainService extends DomainService<MongoDbService> {
   async getDomain(
     id: string,
     findOptions: Maybe<DomainFindOptions>
-  ): Promise<DomainDto> {
-    const domain: ValidDomain = await this.doServiceOperation(async () => {
-      this.logger(`Getting domain ${id}`, JSON.stringify(findOptions));
-      return await this.dbService.getValidDomain(id, findOptions);
-    });
-    return this.validDomainToDomainDto(domain);
+  ): Promise<Maybe<DomainDto>> {
+    const domain: Maybe<ValidDomain> = await this.doServiceOperation(
+      async () => {
+        this.logger(`Getting domain ${id}`, JSON.stringify(findOptions));
+        return await this.dbService.getValidDomain(id, findOptions);
+      }
+    );
+
+    if (domain) {
+      return this.validDomainToDomainDto(domain);
+    }
   }
 
   async getSubdomains(
@@ -51,7 +59,10 @@ export class MongoDomainService extends DomainService<MongoDbService> {
     findOptions: DomainFindOptions
   ): Promise<DomainDto[]> {
     const domains: ValidDomain[] = await this.doServiceOperation(async () => {
-      this.logger(`Getting deep subdomains for ${id}`, JSON.stringify(findOptions));
+      this.logger(
+        `Getting deep subdomains for ${id}`,
+        JSON.stringify(findOptions)
+      );
       return await this.dbService.getSubdomainsByIdDeep(id, findOptions);
     });
 

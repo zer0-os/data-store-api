@@ -21,7 +21,7 @@
   "dependencies": {
     "@azure/functions": "3.0.0",
     "@ethersproject/constants": "5.7.0",
-    "@zero-tech/data-store-core": "0.2.5",
+    "@zero-tech/data-store-core": "0.2.10",
     "ajv": "8.11.0",
     "env-var": "7.1.1"
   }

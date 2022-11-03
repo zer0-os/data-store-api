@@ -1,11 +1,6 @@
 import { Domain, Maybe, ValidDomain } from "@zero-tech/data-store-core";
 import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
-import {
-  DomainDto,
-  MappingResourceAssociations,
-  ResourceRegistryDto,
-  StringMapping,
-} from "../types";
+import { DomainDto, ResourceRegistryDto } from "../types";
 
 export abstract class DomainService<T> {
   dbService: T;
@@ -39,19 +34,18 @@ export abstract class DomainService<T> {
   abstract getResourceRegistry(
     resourceType: string
   ): Promise<Maybe<ResourceRegistryDto>>;
-  abstract getResourceRegistries(
-    resourceTypes: string[]
-  ): Promise<StringMapping<Maybe<ResourceRegistryDto>>>;
 
   validDomainToDomainDto(domain: ValidDomain): DomainDto {
-    const resources: MappingResourceAssociations = {};
-    Object.keys(domain.resources).forEach((key: string) => {
-      resources[key] = {
-        resourceType: domain.resources[key].value.resourceType,
-        resourceId: domain.resources[key].value.resourceId,
-        resourceRegistry: domain.resources[key].value.resourceRegistry,
+    const resources = Object.keys(domain.resources).reduce((prev, current) => {
+      return {
+        ...prev,
+        [current]: {
+          resourceType: domain.resources[current].value.resourceType,
+          resourceId: domain.resources[current].value.resourceId,
+          resourceRegistry: domain.resources[current].value.resourceRegistry,
+        },
       };
-    });
+    }, {});
 
     const response: DomainDto = {
       domainId: domain.domainId,

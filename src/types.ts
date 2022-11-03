@@ -14,10 +14,6 @@ import {
   defaultValueMessageTime,
 } from "@zero-tech/data-store-core/lib/aggregator/constants";
 
-export type StringMapping<T> = {
-  [key: string]: T;
-};
-
 export type Sort = -1 | 1;
 export type Projection = 0 | 1;
 export interface PaginationResponse<T> {
@@ -43,7 +39,7 @@ export interface ResourceRegistryDto {
   resourceRegistry: string;
 }
 
-export interface MappingResourceAssociations {
+interface MappingResourceAssociations {
   [resourceType: string]: ResourceAssociation;
 }
 

@@ -6,12 +6,7 @@ import {
 import { MongoDbService } from "@zero-tech/data-store-core/lib/database/mongo/mongoDbService";
 import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
 import { MongoClient } from "mongodb";
-import {
-  DomainDto,
-  Logger,
-  ResourceRegistryDto,
-  StringMapping,
-} from "../types";
+import { DomainDto, Logger, ResourceRegistryDto } from "../types";
 import { DomainService } from "./domainService";
 
 export class MongoDomainService extends DomainService<MongoDbService> {
@@ -135,30 +130,5 @@ export class MongoDomainService extends DomainService<MongoDbService> {
         resourceRegistry: registry.resourceRegistry,
       };
     }
-  }
-
-  async getResourceRegistries(
-    resourceTypes: string[]
-  ): Promise<StringMapping<Maybe<ResourceRegistryDto>>> {
-    const promises: Promise<Maybe<ResourceRegistry>>[] = resourceTypes.map(
-      (resourceType: string) =>
-        this.doServiceOperation(async () => {
-          this.logger(`Getting resource registry ${resourceType}`);
-          return await this.dbService.getResourceRegistry(resourceType);
-        })
-    );
-
-    const registries = await Promise.all(promises);
-
-    const result: StringMapping<Maybe<ResourceRegistryDto>> = {};
-    registries.forEach((registry: Maybe<ResourceRegistry>, index: number) => {
-      result[resourceTypes[index]] = registry
-        ? {
-            resourceType: registry.resourceType,
-            resourceRegistry: registry.resourceRegistry,
-          }
-        : undefined;
-    });
-    return result;
   }
 }

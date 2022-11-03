@@ -1,0 +1,18 @@
+{
+  "bindings": [
+    {
+      "route": "v1/resource-registry/get/{type}",
+      "authLevel": "anonymous",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "req",
+      "methods": ["get"]
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "res"
+    }
+  ],
+  "scriptFile": "../dist/resource-registry-get/index.js"
+}

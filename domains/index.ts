@@ -6,13 +6,14 @@ import { getDomainFindOptionsFromQuery } from "../src/helpers/domainFindOptionsH
 import { generatePaginationResponse } from "../src/helpers/paginationHelper";
 import * as constants from "../src/constants";
 import { DomainDto } from "../src/types";
+import { replaceOfDefinedKeys } from "../src/helpers/objectHelper";
 const httpTrigger: AzureFunction = async function (
   context: Context,
   req: HttpRequest
 ): Promise<void> {
   try {
     context.log("GET Domains: HTTP trigger function processed a request.");
-    let findOptions = getDomainFindOptionsFromQuery(req, true);
+    const findOptions = getDomainFindOptionsFromQuery(req, true);
     const domainService = await getMongoDomainService(context.log);
     const response = await domainService.listDomains(findOptions);
     const paginationResponse = generatePaginationResponse<DomainDto>(
@@ -22,6 +23,24 @@ const httpTrigger: AzureFunction = async function (
       req.query,
       constants.routes.v1.listDomains
     );
+
+    // Collect all the different resource types and replace resource registry with latest data
+    const resourceTypes: Set<string> = new Set();
+    paginationResponse.results.forEach((domain: DomainDto) => {
+      Object.keys(domain.resources).forEach((resourceType: string) =>
+        resourceTypes.add(resourceType)
+      );
+    });
+    const resourceRegistries = await domainService.getResourceRegistries(
+      Array.from(resourceTypes)
+    );
+    paginationResponse.results.forEach((domain: DomainDto) => {
+      domain.resources = replaceOfDefinedKeys(
+        domain.resources,
+        resourceRegistries
+      );
+    });
+
     context.res = {
       body: paginationResponse,
     };

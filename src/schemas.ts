@@ -17,6 +17,12 @@ const blockchainAddress: JSONSchemaType<Address> = {
   maxLength: 42,
 };
 
+const resourceType: JSONSchemaType<string> = {
+  type: "string",
+  minLength: 1,
+  maxLength: 1,
+};
+
 const domainSortOptionsDef: PartialSchema<DomainFindOptions> = {
   $id: "domainSortOptions",
   definitions: {
@@ -184,3 +190,4 @@ export const validateFindOptions = ajv
 
 export const validateDomainId = ajv.compile(domainId);
 export const validateAddress = ajv.compile(blockchainAddress);
+export const validateResourceType = ajv.compile(resourceType);

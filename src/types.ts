@@ -4,6 +4,7 @@ import {
   BuyNow,
   Domain,
   DomainId,
+  ResourceAssociation,
   UInt256,
 } from "@zero-tech/data-store-core";
 import { Time } from "@zero-tech/data-store-core/lib/shared/helpers/time";
@@ -12,6 +13,10 @@ import {
   noBuyNowListing,
   defaultValueMessageTime,
 } from "@zero-tech/data-store-core/lib/aggregator/constants";
+
+export type StringMapping<T> = {
+  [key: string]: T;
+};
 
 export type Sort = -1 | 1;
 export type Projection = 0 | 1;
@@ -31,6 +36,15 @@ export interface PaginationResponse<T> {
 export enum QueryParamSortDirection {
   desc = 0,
   asc = 1,
+}
+
+export interface ResourceRegistryDto {
+  resourceType: string;
+  resourceRegistry: string;
+}
+
+export interface MappingResourceAssociations {
+  [resourceType: string]: ResourceAssociation;
 }
 
 export interface DomainDto {
@@ -54,6 +68,7 @@ export interface DomainDto {
   groupId: UInt256;
   groupFileIndex: UInt256;
   buyNow: BuyNow;
+  resources: MappingResourceAssociations;
 }
 
 export interface Logger {
@@ -95,4 +110,5 @@ export const domainReflectionSchema: Domain = {
     },
     time: defaultValueMessageTime,
   },
+  resources: {},
 };

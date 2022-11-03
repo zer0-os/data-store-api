@@ -1,11 +1,17 @@
 import {
   Maybe,
+  ResourceRegistry,
   ValidDomain,
 } from "@zero-tech/data-store-core";
 import { MongoDbService } from "@zero-tech/data-store-core/lib/database/mongo/mongoDbService";
 import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
 import { MongoClient } from "mongodb";
-import { DomainDto, Logger, PaginationResponse } from "../types";
+import {
+  DomainDto,
+  Logger,
+  ResourceRegistryDto,
+  StringMapping,
+} from "../types";
 import { DomainService } from "./domainService";
 
 export class MongoDomainService extends DomainService<MongoDbService> {
@@ -111,5 +117,48 @@ export class MongoDomainService extends DomainService<MongoDbService> {
         await this.dbClient.close();
       }
     }
+  }
+
+  async getResourceRegistry(
+    resourceType: string
+  ): Promise<Maybe<ResourceRegistryDto>> {
+    const registry: Maybe<ResourceRegistry> = await this.doServiceOperation(
+      async () => {
+        this.logger(`Getting resource registry ${resourceType}`);
+        return await this.dbService.getResourceRegistry(resourceType);
+      }
+    );
+
+    if (registry) {
+      return {
+        resourceType: registry.resourceType,
+        resourceRegistry: registry.resourceRegistry,
+      };
+    }
+  }
+
+  async getResourceRegistries(
+    resourceTypes: string[]
+  ): Promise<StringMapping<Maybe<ResourceRegistryDto>>> {
+    const promises: Promise<Maybe<ResourceRegistry>>[] = resourceTypes.map(
+      (resourceType: string) =>
+        this.doServiceOperation(async () => {
+          this.logger(`Getting resource registry ${resourceType}`);
+          return await this.dbService.getResourceRegistry(resourceType);
+        })
+    );
+
+    const registries = await Promise.all(promises);
+
+    const result: StringMapping<Maybe<ResourceRegistryDto>> = {};
+    registries.forEach((registry: Maybe<ResourceRegistry>, index: number) => {
+      result[resourceTypes[index]] = registry
+        ? {
+            resourceType: registry.resourceType,
+            resourceRegistry: registry.resourceRegistry,
+          }
+        : undefined;
+    });
+    return result;
   }
 }

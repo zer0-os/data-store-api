@@ -8,6 +8,7 @@ import { createErrorResponse } from "../src/helpers/createErrorResponse";
 import { generatePaginationResponse } from "../src/helpers/paginationHelper";
 import * as constants from "../src/constants";
 import { DomainDto } from "../src/types";
+import { replaceOfDefinedKeys } from "../src/helpers/objectHelper";
 
 const httpTrigger: AzureFunction = async function (
   context: Context,
@@ -36,6 +37,24 @@ const httpTrigger: AzureFunction = async function (
       req.query,
       constants.routes.v1.getSubdomainsByIdDeep + domainId
     );
+
+    // Collect all the different resource types and replace resource registry with latest data
+    const resourceTypes: Set<string> = new Set();
+    paginationResponse.results.forEach((domain: DomainDto) => {
+      Object.keys(domain.resources).forEach((resourceType: string) =>
+        resourceTypes.add(resourceType)
+      );
+    });
+    const resourceRegistries = await domainService.getResourceRegistries(
+      Array.from(resourceTypes)
+    );
+    paginationResponse.results.forEach((domain: DomainDto) => {
+      domain.resources = replaceOfDefinedKeys(
+        domain.resources,
+        resourceRegistries
+      );
+    });
+
     context.res = {
       body: paginationResponse,
     };

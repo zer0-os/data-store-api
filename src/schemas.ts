@@ -19,8 +19,7 @@ const blockchainAddress: JSONSchemaType<Address> = {
 
 const resourceType: JSONSchemaType<string> = {
   type: "string",
-  minLength: 1,
-  maxLength: 1,
+  pattern: "1|2",
 };
 
 const domainSortOptionsDef: PartialSchema<DomainFindOptions> = {

@@ -33,10 +33,6 @@ export function generatePaginationResponse<T>(
     limit,
     path
   );
-  //Remove last result, as it was only included to determine next page status
-  if (results.length > 1) {
-    results = results.slice(0, -1);
-  }
   const pageNumber = limit ? Math.ceil(skip / limit) + 1 : 1;
   const response: PaginationResponse<T> = {
     results: results,

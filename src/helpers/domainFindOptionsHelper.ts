@@ -94,10 +94,15 @@ export function createSortDynamicObject(
         sortDirections[index] !== undefined ? sortDirections[index] : -1;
       sort[createdLogIndex] =
         sortDirections[index] !== undefined ? sortDirections[index] : -1;
-    } else if (x === "buyNow") {
-      const priceFieldPath = "buyNow.value.listing.price";
+    } else if (x === "buyNow.price") {
+      const listingPrice = "buyNow.value.listing.price";
 
-      sort[priceFieldPath] =
+      sort[listingPrice] =
+        sortDirections[index] !== undefined ? sortDirections[index] : -1;
+    } else if (x === "buyNow.time") {
+      const listingTimestamp = "buyNow.time.timestamp";
+
+      sort[listingTimestamp] =
         sortDirections[index] !== undefined ? sortDirections[index] : -1;
     } else {
       sort[x] =

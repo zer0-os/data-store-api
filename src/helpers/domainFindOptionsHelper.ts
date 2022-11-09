@@ -119,9 +119,12 @@ export function resolveObjectValues(
   incomingValue: string
 ): string {
   let match = "";
+  // incomingValue might contain other sub-field names, i.e. buyNow.price
+  const incomingFields = incomingValue.split(".");
   Object.keys(object).some((element) => {
-    if (element.toLowerCase() == incomingValue.toLowerCase()) {
-      match = element;
+    // only compare the top field name
+    if (element.toLowerCase() == incomingFields[0].toLowerCase()) {
+      match = element.concat(incomingValue.slice(element.length));
       return true; //Break loop
     }
   });

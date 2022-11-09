@@ -1,5 +1,5 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
-import { Address, Domain } from "@zero-tech/data-store-core";
+import { Address } from "@zero-tech/data-store-core";
 import { getMongoDomainService } from "../src/helpers";
 import { createErrorResponse } from "../src/helpers/createErrorResponse";
 import { createHTTPResponse } from "../src/helpers/createHTTPResponse";
@@ -23,7 +23,7 @@ const httpTrigger: AzureFunction = async function (
       return;
     }
 
-    let findOptions = getDomainFindOptionsFromQuery(req, true);
+    const findOptions = getDomainFindOptionsFromQuery(req, true);
     const domainService = await getMongoDomainService(context.log);
     const response = await domainService.searchDomainsByOwner(
       ownerAddress,

@@ -4,6 +4,7 @@ import {
   BuyNow,
   Domain,
   DomainId,
+  ResourceAssociation,
   UInt256,
 } from "@zero-tech/data-store-core";
 import { Time } from "@zero-tech/data-store-core/lib/shared/helpers/time";
@@ -33,6 +34,15 @@ export enum QueryParamSortDirection {
   asc = 1,
 }
 
+export interface ResourceRegistryDto {
+  resourceType: string;
+  resourceRegistry: string;
+}
+
+interface MappingResourceAssociations {
+  [resourceType: string]: ResourceAssociation;
+}
+
 export interface DomainDto {
   domainId: DomainId;
   isRoot: boolean;
@@ -54,6 +64,7 @@ export interface DomainDto {
   groupId: UInt256;
   groupFileIndex: UInt256;
   buyNow: BuyNow;
+  resources: MappingResourceAssociations;
 }
 
 export interface Logger {
@@ -95,4 +106,5 @@ export const domainReflectionSchema: Domain = {
     },
     time: defaultValueMessageTime,
   },
+  resources: {},
 };

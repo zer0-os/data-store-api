@@ -1,6 +1,6 @@
 import { Domain, Maybe, ValidDomain } from "@zero-tech/data-store-core";
 import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
-import { DomainDto } from "../types";
+import { DomainDto, ResourceRegistryDto } from "../types";
 
 export abstract class DomainService<T> {
   dbService: T;
@@ -31,8 +31,22 @@ export abstract class DomainService<T> {
     findOptions: Maybe<DomainFindOptions>
   ): Promise<DomainDto[]>;
   abstract doServiceOperation(serviceFn: Function): Promise<Domain[] | Domain>;
+  abstract getResourceRegistry(
+    resourceType: string
+  ): Promise<Maybe<ResourceRegistryDto>>;
 
   validDomainToDomainDto(domain: ValidDomain): DomainDto {
+    const resources = Object.keys(domain.resources).reduce((prev, current) => {
+      return {
+        ...prev,
+        [current]: {
+          resourceType: domain.resources[current].value.resourceType,
+          resourceId: domain.resources[current].value.resourceId,
+          resourceRegistry: domain.resources[current].value.resourceRegistry,
+        },
+      };
+    }, {});
+
     const response: DomainDto = {
       domainId: domain.domainId,
       isRoot: domain.isRoot,
@@ -54,6 +68,7 @@ export abstract class DomainService<T> {
       groupId: domain.groupId.value,
       groupFileIndex: domain.groupFileIndex,
       buyNow: domain.buyNow.value,
+      resources: resources,
     };
     return response;
   }

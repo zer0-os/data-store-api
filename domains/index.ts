@@ -1,18 +1,18 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
-import { Domain } from "@zero-tech/data-store-core";
 import { getMongoDomainService } from "../src/helpers";
 import { createErrorResponse } from "../src/helpers/createErrorResponse";
 import { getDomainFindOptionsFromQuery } from "../src/helpers/domainFindOptionsHelper";
 import { generatePaginationResponse } from "../src/helpers/paginationHelper";
 import * as constants from "../src/constants";
 import { DomainDto } from "../src/types";
+
 const httpTrigger: AzureFunction = async function (
   context: Context,
   req: HttpRequest
 ): Promise<void> {
   try {
     context.log("GET Domains: HTTP trigger function processed a request.");
-    let findOptions = getDomainFindOptionsFromQuery(req, true);
+    const findOptions = getDomainFindOptionsFromQuery(req, true);
     const domainService = await getMongoDomainService(context.log);
     const response = await domainService.listDomains(findOptions);
     const paginationResponse = generatePaginationResponse<DomainDto>(

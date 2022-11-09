@@ -1,5 +1,5 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
-import { Domain, DomainId } from "@zero-tech/data-store-core";
+import { DomainId } from "@zero-tech/data-store-core";
 import { getMongoDomainService } from "../src/helpers";
 import { getDomainFindOptionsFromQuery } from "../src/helpers/domainFindOptionsHelper";
 import { validateDomainId } from "../src/schemas";

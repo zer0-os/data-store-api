@@ -16,7 +16,7 @@ const httpTrigger: AzureFunction = async function (
     );
     const domainName: string = req.params.name;
 
-    let findOptions = getDomainFindOptionsFromQuery(req, true);
+    const findOptions = getDomainFindOptionsFromQuery(req, true);
     const domainService = await getMongoDomainService(context.log);
     const response = await domainService.searchDomainsByName(
       domainName,

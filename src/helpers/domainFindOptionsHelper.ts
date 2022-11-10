@@ -96,14 +96,20 @@ export function createSortDynamicObject(
         sortDirections[index] !== undefined ? sortDirections[index] : -1;
     } else if (x === "buyNow.price") {
       const listingPrice = "buyNow.value.listing.price";
+      // buyNow should sort by isActive desc
+      const isActive = "buyNow.value.isActive";
 
       sort[listingPrice] =
         sortDirections[index] !== undefined ? sortDirections[index] : -1;
+      sort[isActive] = -1;
     } else if (x === "buyNow.time") {
       const listingTimestamp = "buyNow.time.timestamp";
+      // buyNow should sort by isActive desc
+      const isActive = "buyNow.value.isActive";
 
       sort[listingTimestamp] =
         sortDirections[index] !== undefined ? sortDirections[index] : -1;
+      sort[isActive] = -1;
     } else {
       sort[x] =
         sortDirections[index] !== undefined ? sortDirections[index] : -1;

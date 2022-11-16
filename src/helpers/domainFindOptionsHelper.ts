@@ -94,11 +94,22 @@ export function createSortDynamicObject(
         sortDirections[index] !== undefined ? sortDirections[index] : -1;
       sort[createdLogIndex] =
         sortDirections[index] !== undefined ? sortDirections[index] : -1;
-    } else if (x === "buyNow") {
-      const priceFieldPath = "buyNow.value.listing.price";
+    } else if (x === "buyNow.price") {
+      const listingPrice = "buyNow.value.listing.price";
+      // buyNow should sort by isActive desc
+      const isActive = "buyNow.value.isActive";
 
-      sort[priceFieldPath] =
+      sort[listingPrice] =
         sortDirections[index] !== undefined ? sortDirections[index] : -1;
+      sort[isActive] = -1;
+    } else if (x === "buyNow.time") {
+      const listingTimestamp = "buyNow.time.timestamp";
+      // buyNow should sort by isActive desc
+      const isActive = "buyNow.value.isActive";
+
+      sort[listingTimestamp] =
+        sortDirections[index] !== undefined ? sortDirections[index] : -1;
+      sort[isActive] = -1;
     } else {
       sort[x] =
         sortDirections[index] !== undefined ? sortDirections[index] : -1;
@@ -114,9 +125,12 @@ export function resolveObjectValues(
   incomingValue: string
 ): string {
   let match = "";
+  // incomingValue might contain other sub-field names, i.e. buyNow.price
+  const incomingFields = incomingValue.split(".");
   Object.keys(object).some((element) => {
-    if (element.toLowerCase() == incomingValue.toLowerCase()) {
-      match = element;
+    // only compare the top field name
+    if (element.toLowerCase() == incomingFields[0].toLowerCase()) {
+      match = element.concat(incomingValue.slice(element.length));
       return true; //Break loop
     }
   });

@@ -34,7 +34,7 @@ export function generatePaginationResponse<T>(
     path
   );
   //Remove last result, as it was only included to determine next page status
-  if (results.length > 1) {
+  if (results.length > limit) {
     results = results.slice(0, -1);
   }
   const pageNumber = limit ? Math.ceil(skip / limit) + 1 : 1;

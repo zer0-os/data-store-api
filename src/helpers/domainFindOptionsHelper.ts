@@ -4,6 +4,7 @@ import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/f
 import { SortDirection } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
 import * as constants from "../../src/constants";
 import { generatePageableFindOptions } from "./paginationHelper";
+import { InvalidSortFieldsError } from "../errors";
 
 interface DynamicObject<T> {
   [key: string]: T;
@@ -80,7 +81,9 @@ export function createSort(req: HttpRequest): DynamicObject<SortDirection> {
             : defaultDirection;
       }
     } else {
-      throw new Error(`Found an invalid sort field: ${sortValue}`);
+      throw new InvalidSortFieldsError(
+        `Found an invalid sort field: ${sortValue}`
+      );
     }
   });
 

@@ -11,8 +11,8 @@ export class DataStoreApiError extends Error {
   }
 }
 
-export class InvalidSortFieldsError extends DataStoreApiError {
+export class InvalidSortFieldError extends DataStoreApiError {
   constructor(message: string) {
-    super(message, 400, "InvalidSortFieldsError");
+    super(message, 400, "InvalidSortFieldError");
   }
 }

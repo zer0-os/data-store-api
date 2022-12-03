@@ -72,7 +72,7 @@ export const mappingSortProps: MappingSortProps = {
     "buyNow.value.listing.price": -1,
     "buyNow.value.isActive": -1,
   },
-  "buyNow.timestamp": {
+  "buyNow.time": {
     "buyNow.time.timestamp": -1,
     "buyNow.value.isActive": -1,
   },

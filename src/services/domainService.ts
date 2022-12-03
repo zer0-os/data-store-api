@@ -1,4 +1,9 @@
-import { Domain, Maybe, ValidDomain } from "@zero-tech/data-store-core";
+import {
+  Domain,
+  Maybe,
+  ResourceType,
+  ValidDomain,
+} from "@zero-tech/data-store-core";
 import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
 import { DomainDto, ResourceRegistryDto } from "../types";
 
@@ -37,13 +42,10 @@ export abstract class DomainService<T> {
 
   validDomainToDomainDto(domain: ValidDomain): DomainDto {
     const resources = Object.keys(domain.resources).reduce((prev, current) => {
+      const resource = domain.resources[current as ResourceType];
       return {
         ...prev,
-        [current]: {
-          resourceType: domain.resources[current].value.resourceType,
-          resourceId: domain.resources[current].value.resourceId,
-          resourceRegistry: domain.resources[current].value.resourceRegistry,
-        },
+        [current]: resource!.value,
       };
     }, {});
 

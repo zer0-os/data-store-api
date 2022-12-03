@@ -1,6 +1,7 @@
 import {
   Maybe,
   ResourceRegistry,
+  ResourceType,
   ValidDomain,
 } from "@zero-tech/data-store-core";
 import { MongoDbService } from "@zero-tech/data-store-core/lib/database/mongo/mongoDbService";
@@ -120,7 +121,9 @@ export class MongoDomainService extends DomainService<MongoDbService> {
     const registry: Maybe<ResourceRegistry> = await this.doServiceOperation(
       async () => {
         this.logger(`Getting resource registry ${resourceType}`);
-        return await this.dbService.getResourceRegistry(resourceType);
+        return await this.dbService.getResourceRegistry(
+          resourceType as ResourceType
+        );
       }
     );
 

@@ -3,6 +3,7 @@ import {
   BuyNow,
   DomainId,
   ResourceAssociation,
+  ResourceType,
   SortDirection,
   UInt256,
 } from "@zero-tech/data-store-core";
@@ -29,13 +30,13 @@ export enum QueryParamSortDirection {
 }
 
 export interface ResourceRegistryDto {
-  resourceType: string;
-  resourceRegistry: string;
+  resourceType: ResourceType;
+  resourceRegistry: Address;
 }
 
-interface MappingResourceAssociations {
-  [resourceType: string]: ResourceAssociation;
-}
+type MappingResourceAssociations = {
+  [resourceType in ResourceType]?: ResourceAssociation;
+};
 
 export interface DomainDto {
   domainId: DomainId;

@@ -1,9 +1,10 @@
 import { HttpRequest } from "@azure/functions";
-import { QueryParamSortDirection, domainReflectionSchema } from "../types";
+import { QueryParamSortDirection } from "../types";
 import { DomainFindOptions } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
 import { SortDirection } from "@zero-tech/data-store-core/lib/shared/types/findOptions";
 import * as constants from "../../src/constants";
 import { generatePageableFindOptions } from "./paginationHelper";
+import { InvalidSortFieldError } from "../errors";
 
 interface DynamicObject<T> {
   [key: string]: T;
@@ -37,21 +38,24 @@ export function valueToSortDirection(
 }
 
 /**
- * Creates a SortObject, dynamically. If no sort directions are supplied, default sort direction is descending
+ * Creates a SortObject, dynamically. If no sort directions are supplied,
+ * default sort direction is descending.
+ * Throws Error if found that have invalid sort fields.
  * @param req - an HttpRequest
  * @returns  - a DomainSortOptions object
  */
 export function createSort(req: HttpRequest): DynamicObject<SortDirection> {
   let sortValues = constants.defaultSort;
-  let sortDirection = constants.defaultSortDirection;
+  let sortDirections = constants.defaultSortDirection;
   if (req.query) {
     if (req.query.sort) {
-      sortValues = req.query.sort
-        .split(",")
-        .map((val) => resolveObjectValues(domainReflectionSchema, val));
+      sortValues = req.query.sort.split(",");
+      sortValues = sortValues.filter(
+        (item, index) => sortValues.indexOf(item) === index
+      );
     }
     if (req.query.sortDirection) {
-      sortDirection = req.query?.sortDirection
+      sortDirections = req.query.sortDirection
         .split(",")
         .map((val) =>
           valueToSortDirection(
@@ -62,77 +66,26 @@ export function createSort(req: HttpRequest): DynamicObject<SortDirection> {
         );
     }
   }
-  const sortObject = createSortDynamicObject(sortValues, sortDirection);
+
+  const sortObject: DynamicObject<SortDirection> = {};
+  sortValues.forEach((sortValue, index) => {
+    // Check if sort field is valid
+    if (sortValue in constants.mappingSortProps) {
+      // Map sort field to mutliple fields with default sort direction
+      for (const [mappingKey, defaultDirection] of Object.entries(
+        constants.mappingSortProps[sortValue]
+      )) {
+        sortObject[mappingKey] =
+          sortDirections[index] !== undefined
+            ? sortDirections[index]
+            : defaultDirection;
+      }
+    } else {
+      throw new InvalidSortFieldError(
+        `Found an invalid sort field: ${sortValue}`
+      );
+    }
+  });
 
   return sortObject;
-}
-
-/**
- * Creates a dynamic object with the variables named after the given string and the values set to the sortDirections.
- * Defaults to -1 when a direction is not supplied
- * @param sortValues - Array of strings to set as the variable names within the object
- * @param sortDirections - An array of sort directions to set the variables within the object to
- * @returns
- */
-export function createSortDynamicObject(
-  sortValues: string[],
-  sortDirections: SortDirection[]
-): DynamicObject<SortDirection> {
-  const sort: DynamicObject<SortDirection> = {};
-  sortValues = sortValues.filter((item, index) => {
-    return sortValues.indexOf(item) === index;
-  });
-  sortValues.forEach((x, index) => {
-    if (x === "created") {
-      const createdTimestamp = `${x}.timestamp`;
-      const createdBlockNumber = `${x}.blockNumber`;
-      const createdLogIndex = `${x}.logIndex`;
-
-      sort[createdTimestamp] =
-        sortDirections[index] !== undefined ? sortDirections[index] : -1;
-      sort[createdBlockNumber] =
-        sortDirections[index] !== undefined ? sortDirections[index] : -1;
-      sort[createdLogIndex] =
-        sortDirections[index] !== undefined ? sortDirections[index] : -1;
-    } else if (x === "buyNow.price") {
-      const listingPrice = "buyNow.value.listing.price";
-      // buyNow should sort by isActive desc
-      const isActive = "buyNow.value.isActive";
-
-      sort[listingPrice] =
-        sortDirections[index] !== undefined ? sortDirections[index] : -1;
-      sort[isActive] = -1;
-    } else if (x === "buyNow.time") {
-      const listingTimestamp = "buyNow.time.timestamp";
-      // buyNow should sort by isActive desc
-      const isActive = "buyNow.value.isActive";
-
-      sort[listingTimestamp] =
-        sortDirections[index] !== undefined ? sortDirections[index] : -1;
-      sort[isActive] = -1;
-    } else {
-      sort[x] =
-        sortDirections[index] !== undefined ? sortDirections[index] : -1;
-    }
-  });
-
-  return sort;
-}
-
-//Iterates through an object to find matching field names with correct capitalization
-export function resolveObjectValues(
-  object: Object,
-  incomingValue: string
-): string {
-  let match = "";
-  // incomingValue might contain other sub-field names, i.e. buyNow.price
-  const incomingFields = incomingValue.split(".");
-  Object.keys(object).some((element) => {
-    // only compare the top field name
-    if (element.toLowerCase() == incomingFields[0].toLowerCase()) {
-      match = element.concat(incomingValue.slice(element.length));
-      return true; //Break loop
-    }
-  });
-  return match;
 }

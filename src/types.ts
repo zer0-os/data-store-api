@@ -1,20 +1,15 @@
-import { AddressZero, EtherSymbol, HashZero } from "@ethersproject/constants";
 import {
   Address,
   BuyNow,
-  Domain,
   DomainId,
   ResourceAssociation,
+  ResourceType,
+  SortDirection,
   UInt256,
 } from "@zero-tech/data-store-core";
 import { Time } from "@zero-tech/data-store-core/lib/shared/helpers/time";
 import { History } from "@zero-tech/data-store-core/lib/shared/types/history";
-import {
-  noBuyNowListing,
-  defaultValueMessageTime,
-} from "@zero-tech/data-store-core/lib/aggregator/constants";
 
-export type Sort = -1 | 1;
 export type Projection = 0 | 1;
 export interface PaginationResponse<T> {
   results: T[];
@@ -35,13 +30,13 @@ export enum QueryParamSortDirection {
 }
 
 export interface ResourceRegistryDto {
-  resourceType: string;
-  resourceRegistry: string;
+  resourceType: ResourceType;
+  resourceRegistry: Address;
 }
 
-interface MappingResourceAssociations {
-  [resourceType: string]: ResourceAssociation;
-}
+type MappingResourceAssociations = {
+  [resourceType in ResourceType]?: ResourceAssociation;
+};
 
 export interface DomainDto {
   domainId: DomainId;
@@ -78,33 +73,8 @@ export interface Logger {
   error(...args: any[]): void;
 }
 
-/**
- * If this ever fails to compile, initialize the missing variable with a default value
- */
-export const domainReflectionSchema: Domain = {
-  domainId: "",
-  isRoot: false,
-  children: [],
-  history: [],
-  label: undefined,
-  name: undefined,
-  parent: undefined,
-  labelHash: undefined,
-  minter: undefined,
-  owner: undefined,
-  metadataUri: undefined,
-  royaltyAmount: undefined,
-  locked: undefined,
-  lockedBy: undefined,
-  created: undefined,
-  registrar: undefined,
-  isValid: false,
-  buyNow: {
-    value: {
-      listing: noBuyNowListing,
-      isActive: false,
-    },
-    time: defaultValueMessageTime,
-  },
-  resources: {},
+export type MappingSortProps = {
+  [key: string]: {
+    [mappingKey: string]: SortDirection;
+  };
 };

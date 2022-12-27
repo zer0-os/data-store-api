@@ -8,7 +8,10 @@ import {
   UInt256,
 } from "@zero-tech/data-store-core";
 import { Time } from "@zero-tech/data-store-core/lib/shared/helpers/time";
-import { History } from "@zero-tech/data-store-core/lib/shared/types/history";
+import {
+  BidPlacedEvent,
+  History,
+} from "@zero-tech/data-store-core/lib/shared/types/history";
 
 export type Projection = 0 | 1;
 export interface PaginationResponse<T> {
@@ -56,6 +59,7 @@ export interface DomainDto {
   created: Time;
   children: DomainId[];
   history: History[];
+  activeBids: BidPlacedEvent[];
   groupId: UInt256;
   groupFileIndex: UInt256;
   buyNow: BuyNow;

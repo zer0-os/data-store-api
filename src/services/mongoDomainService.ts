@@ -47,7 +47,7 @@ export class MongoDomainService extends DomainService<MongoDbService> {
 
   async getSubdomains(
     id: string,
-    findOptions: Maybe<DomainFindOptions>
+    findOptions: DomainFindOptions
   ): Promise<DomainDto[]> {
     const domains: ValidDomain[] = await this.doServiceOperation(async () => {
       this.logger(`Getting subdomains for ${id}`, JSON.stringify(findOptions));

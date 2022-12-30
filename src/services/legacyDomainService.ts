@@ -106,6 +106,9 @@ export async function getSubdomains(
   if (request.body) {
     findOptions = request.body.options;
   }
+  if (!findOptions) {
+    findOptions = {};
+  }
   context.log(
     `Getting subdomains for ${domainId}`,
     JSON.stringify(findOptions)

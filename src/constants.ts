@@ -82,4 +82,7 @@ export const mappingSortProps: MappingSortProps = {
   history: {
     history: -1,
   },
+  activeBids: {
+    activeBids: -1,
+  },
 };

@@ -67,6 +67,7 @@ export abstract class DomainService<T> {
       created: domain.created,
       children: domain.children,
       history: domain.history,
+      activeBids: domain.activeBids,
       groupId: domain.groupId.value,
       groupFileIndex: domain.groupFileIndex,
       buyNow: domain.buyNow.value,

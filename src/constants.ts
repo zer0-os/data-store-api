@@ -85,4 +85,12 @@ export const mappingSortProps: MappingSortProps = {
   activeBids: {
     activeBids: -1,
   },
+  "activeBids.amount": {
+    "activeBids.amount": -1
+  },
+  "activeBids.time": {
+    "activeBids.time.timestamp": -1,
+    "activeBids.time.blockNumber": -1,
+    "activeBids.time.logIndex": -1,
+  },
 };

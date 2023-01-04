@@ -1,5 +1,5 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
-import { DomainId } from "@zero-tech/data-store-core";
+import { DomainId, Maybe } from "@zero-tech/data-store-core";
 import { getMongoDomainService } from "../src/helpers";
 import { getDomainFindOptionsFromQuery } from "../src/helpers/domainFindOptionsHelper";
 import { validateDomainId } from "../src/schemas";
@@ -8,6 +8,8 @@ import { createErrorResponse } from "../src/helpers/createErrorResponse";
 import { generatePaginationResponse } from "../src/helpers/paginationHelper";
 import * as constants from "../src/constants";
 import { DomainDto } from "../src/types";
+import { DataStoreApiError } from "../src/errors";
+import { checkFilterCompatibility } from "../src/helpers/filterHelper";
 
 const httpTrigger: AzureFunction = async function (
   context: Context,
@@ -22,10 +24,15 @@ const httpTrigger: AzureFunction = async function (
     }
 
     const findOptions = getDomainFindOptionsFromQuery(req, true);
+
+    const nameFilter: Maybe<string> = req.query.name;
+    checkFilterCompatibility(findOptions, nameFilter, "name");
+
     const domainService = await getMongoDomainService(context.log);
     const response = await domainService.getSubdomains(
       req.params.id,
-      findOptions
+      findOptions,
+      nameFilter
     );
     const paginationResponse = generatePaginationResponse<DomainDto>(
       response,
@@ -34,9 +41,12 @@ const httpTrigger: AzureFunction = async function (
       req.query,
       constants.routes.v1.getSubdomainsById + domainId
     );
+
     context.res = {
       body: paginationResponse,
     };
+
+
   } catch (err) {
     context.log.error(
       "GET Subdomains, error encountered: ",

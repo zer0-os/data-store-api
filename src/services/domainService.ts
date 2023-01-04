@@ -13,27 +13,29 @@ export abstract class DomainService<T> {
     this.dbService = service;
   }
   abstract listDomains(
-    findOptions: Maybe<DomainFindOptions>
+    findOptions: DomainFindOptions
   ): Promise<DomainDto[]>;
   abstract getDomain(
     id: string,
-    findOptions: Maybe<DomainFindOptions>
+    findOptions: DomainFindOptions
   ): Promise<Maybe<DomainDto>>;
   abstract getSubdomains(
     id: string,
-    findOptions: Maybe<DomainFindOptions>
+    findOptions: DomainFindOptions,
+    nameFilter: string
   ): Promise<DomainDto[]>;
   abstract getSubdomainsDeep(
     id: string,
-    findOptions: Maybe<DomainFindOptions>
+    findOptions: DomainFindOptions,
+    nameFilter: string
   ): Promise<DomainDto[]>;
   abstract searchDomainsByOwner(
     address: string,
-    findOptions: Maybe<DomainFindOptions>
+    findOptions: DomainFindOptions
   ): Promise<DomainDto[]>;
   abstract searchDomainsByName(
     searchTerm: string,
-    findOptions: Maybe<DomainFindOptions>
+    findOptions: DomainFindOptions
   ): Promise<DomainDto[]>;
   abstract doServiceOperation(serviceFn: Function): Promise<Domain[] | Domain>;
   abstract getResourceRegistry(

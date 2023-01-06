@@ -1,6 +1,6 @@
 {
   "name": "data-store-api",
-  "version": "0.4.2",
+  "version": "0.4.4",
   "description": "",
   "scripts": {
     "build": "tsc",
@@ -21,7 +21,7 @@
   "dependencies": {
     "@azure/functions": "3.0.0",
     "@ethersproject/constants": "5.7.0",
-    "@zero-tech/data-store-core": "0.4.4",
+    "@zero-tech/data-store-core": "0.4.6",
     "ajv": "8.11.0",
     "env-var": "7.1.1"
   }

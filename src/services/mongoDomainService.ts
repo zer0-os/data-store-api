@@ -20,7 +20,7 @@ export class MongoDomainService extends DomainService<MongoDbService> {
   }
 
   async listDomains(
-    findOptions: Maybe<DomainFindOptions>
+    findOptions: DomainFindOptions
   ): Promise<DomainDto[]> {
     const domains: ValidDomain[] = await this.doServiceOperation(async () => {
       this.logger(`Listing all domains`, JSON.stringify(findOptions));
@@ -31,7 +31,7 @@ export class MongoDomainService extends DomainService<MongoDbService> {
 
   async getDomain(
     id: string,
-    findOptions: Maybe<DomainFindOptions>
+    findOptions: DomainFindOptions
   ): Promise<Maybe<DomainDto>> {
     const domain: Maybe<ValidDomain> = await this.doServiceOperation(
       async () => {
@@ -47,25 +47,27 @@ export class MongoDomainService extends DomainService<MongoDbService> {
 
   async getSubdomains(
     id: string,
-    findOptions: DomainFindOptions
+    findOptions: DomainFindOptions,
+    nameFilter: string
   ): Promise<DomainDto[]> {
     const domains: ValidDomain[] = await this.doServiceOperation(async () => {
       this.logger(`Getting subdomains for ${id}`, JSON.stringify(findOptions));
-      return await this.dbService.getSubdomainsById(id, findOptions);
+      return await this.dbService.getSubdomainsById(id, findOptions, nameFilter);
     });
     return domains.map((x) => this.validDomainToDomainDto(x));
   }
 
   async getSubdomainsDeep(
     id: string,
-    findOptions: DomainFindOptions
+    findOptions: DomainFindOptions,
+    nameFilter: string
   ): Promise<DomainDto[]> {
     const domains: ValidDomain[] = await this.doServiceOperation(async () => {
       this.logger(
         `Getting deep subdomains for ${id}`,
         JSON.stringify(findOptions)
       );
-      return await this.dbService.getSubdomainsByIdDeep(id, findOptions);
+      return await this.dbService.getSubdomainsByIdDeep(id, findOptions, nameFilter);
     });
 
     return domains.map((domain) => this.validDomainToDomainDto(domain));
@@ -73,7 +75,7 @@ export class MongoDomainService extends DomainService<MongoDbService> {
 
   async searchDomainsByOwner(
     address: string,
-    findOptions: Maybe<DomainFindOptions>
+    findOptions: DomainFindOptions
   ): Promise<DomainDto[]> {
     const domains: ValidDomain[] = await this.doServiceOperation(async () => {
       this.logger(
@@ -87,7 +89,7 @@ export class MongoDomainService extends DomainService<MongoDbService> {
 
   async searchDomainsByName(
     searchTerm: string,
-    findOptions: Maybe<DomainFindOptions>
+    findOptions: DomainFindOptions
   ): Promise<DomainDto[]> {
     const domains: ValidDomain[] = await this.doServiceOperation(async () => {
       this.logger(
